@@ -1,0 +1,1176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>iiHub — Handwritten Revision Notes (Maths · Physics · Chemistry)</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind (for quick layout helpers) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root{
+      /* Palette (deep charcoal primary) */
+      --ash-900: #1E293B;    /* Deep Charcoal (primary headings & UI) */
+      --ash-fill: #F1F5F9;   /* soft ash fill for cards/trust box */
+      --panel-bg: #FFFFFF;
+      --soft-ink: #6B7280;
+      --accent: #16A34A;     /* optional accent (green) */
+      --danger: #DC2626;     /* urgency red (timer) */
+      --card-shadow: 0 12px 40px rgba(14,20,28,0.06);
+    }
+
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Poppins", Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background:var(--ash-fill);
+      color:var(--ash-900);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* General card shadow */
+    .shadow-soft{box-shadow:var(--card-shadow)}
+
+    /* Top timer band */
+    .timer-band{background:var(--ash-900); color:#fff}
+    .timer-digit{
+      background:var(--panel-bg);
+      color:var(--danger);
+      padding:12px 18px;
+      border-radius:10px;
+      font-weight:800;
+      font-family: 'Courier New', monospace;
+      font-size:28px;
+      display:inline-block;
+      min-width:92px;
+      text-align:center;
+      box-shadow:0 6px 18px rgba(0,0,0,0.18);
+    }
+    @media(min-width:768px){ .timer-digit{ font-size:44px; min-width:160px; padding:16px 24px; } }
+
+    /* What you get tiles */
+    .what-you-get .tile { background:var(--panel-bg); border-radius:12px; padding:18px; display:flex; flex-direction:column; align-items:center; gap:12px; box-shadow:0 10px 30px rgba(14,20,28,0.06); }
+    .what-you-get .icon { width:72px; height:72px; border-radius:14px; background:#f7f8f9; display:flex; align-items:center; justify-content:center; font-size:28px; }
+
+    /* What's included list stronger */
+    .whats-included .included-list { font-size:18px; font-weight:600; line-height:1.6; margin:0; padding:0 8px; color:var(--ash-900) }
+    .whats-included .included-list li { margin-bottom:14px; margin-left:20px; list-style: disc; }
+
+    /* Trust box (25k) */
+    .trust-box { background:var(--ash-fill); padding:22px; border-radius:14px; box-shadow:0 12px 40px rgba(14,20,28,0.05); display:flex; gap:14px; align-items:center; }
+    .trust-box .stars { font-size:30px; line-height:1 }
+    .trust-box .title { font-size:22px; font-weight:800; color:var(--ash-900) }
+    .trust-box .sub { color:var(--soft-ink); font-size:14px }
+
+    /* Results heading outside card */
+    .results-heading { margin:28px 0 12px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 10px; }
+    .results-heading h3 { font-size:20px; font-weight:800; margin:0; color:var(--ash-900) }
+    .results-heading a { font-size:14px; color:var(--ash-900); text-decoration:underline; opacity:0.9 }
+
+    /* Results horizontal scroll */
+    .results-grid { display:flex; gap:16px; overflow-x:auto; padding-bottom:8px; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
+    .result-card { min-width:320px; background:var(--panel-bg); border-radius:12px; overflow:hidden; box-shadow:0 10px 30px rgba(14,20,28,0.06); scroll-snap-align:start; display:flex; flex-direction:column; }
+    .result-card .photo { width:100%; height:200px; object-fit:cover; display:block; }
+    .result-card .body { padding:16px; }
+    .result-card .name { font-size:18px; font-weight:800; color:var(--ash-900); margin-bottom:6px; }
+    .result-card .role { font-size:14px; color:var(--soft-ink); margin-bottom:8px; }
+    .result-card .quote { font-size:15px; color:var(--ash-900); line-height:1.5; }
+
+    /* Book showcase (three vertical books) */
+    .books-row { display:flex; gap:18px; overflow-x:auto; padding:14px 6px; -webkit-overflow-scrolling:touch; scroll-snap-type:x mandatory; }
+    .book-card { min-width:140px; scroll-snap-align:start; display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .book-cover {
+      width:120px;
+      height:210px;
+      background:var(--panel-bg);
+      border-radius:8px;
+      overflow:hidden;
+      box-shadow:0 14px 40px rgba(14,20,28,0.06);
+      display:block;
+      cursor:pointer;
+      transition:transform 180ms ease, box-shadow 180ms ease;
+      position:relative;
+    }
+    .book-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+    .book-cover:hover { transform:translateY(-6px); box-shadow:0 26px 60px rgba(14,20,28,0.12); }
+    .book-badge { position:absolute; right:8px; top:8px; background:rgba(0,0,0,0.6); color:#fff; font-size:11px; padding:6px 8px; border-radius:8px; }
+
+    /* ---------- additions to match Image 2 look ---------- */
+.faq-black-wrapper summary {
+  font-size:18px;
+  font-weight:800;
+  color:#0b0b0b; /* summary text inside white card */
+}
+.faq-black-wrapper h4 {
+  font-size:20px;
+  text-align:center;
+  margin-bottom:14px;
+}
+
+/* price-panel visual */
+.price-panel{
+  background: #F8FAFC;        /* soft panel like image 2 */
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 18px 44px rgba(14,20,28,0.06);
+}
+
+/* CTA button styling to match dark rounded look + white outline */
+#checkoutBtnRight{
+  background: var(--ash-900);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 16px;
+}
+#checkoutBtnRight:hover{ transform: translateY(-2px); box-shadow: 0 18px 40px rgba(14,20,28,0.12); }
+
+/* WhatsApp secondary CTA */
+#whatsappBtnRight{
+  background: #fff;
+  color: var(--ash-900);
+  border: 1px solid #E6E9EE;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+/* ensure horizontal layout and button sizing */
+.cta-row { display:flex; flex-direction:row; gap:12px; flex-wrap:nowrap; align-items:center; }
+.cta-row a { white-space:nowrap; text-decoration:none; }
+
+/* override for small devices if you ever want wrap: use .cta-row-sm */
+@media (max-width:420px){
+  /* if the buttons still overflow on tiny phones, allow them to wrap */
+  .cta-row { flex-wrap:wrap; }
+}
+/* stacked CTAs: vertical layout for price-panel */
+.cta-col { display:flex; flex-direction:column; gap:10px; align-items:stretch; }
+.cta-col a { width:100%; box-sizing:border-box; }
+
+/* small-screen fallback (if you ever use .cta-row) */
+@media (max-width:420px){
+  .cta-row { flex-wrap:wrap; }
+}
+
+
+
+/* make sure the image on left is nicely rounded */
+.card img { border-radius: 12px; }
+
+/* spacing & responsiveness adjustments */
+@media(min-width:768px){
+  .card.p-6 { padding: 28px; }
+  .price-panel { padding: 22px; }
+  #whatsappBtnRight { width: 180px; }
+}
+
+    /* Floating social */
+    .social-float { position:fixed; right:12px; bottom:140px; display:flex; flex-direction:column; gap:10px; z-index:60 }
+    .social-btn { background:var(--panel-bg); width:52px; height:52px; border-radius:999px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(14,20,28,0.08); text-decoration:none; color:var(--ash-900); font-size:20px }
+
+    /* Small modal & general helpers */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:80}
+    .modal-card{background:var(--panel-bg);border-radius:12px;padding:18px;max-width:920px;width:100%;box-shadow:0 30px 80px rgba(14,20,28,0.35)}
+    .card { background:var(--panel-bg); border-radius:12px; padding:14px; box-shadow:0 8px 30px rgba(14,20,28,0.04); }
+    .badge { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-weight:600; background:#f7f8f9; color:var(--ash-900); }
+
+    /* Responsive tweaks */
+    @media(min-width:768px){
+      .result-card { min-width:360px; }
+      .timer-digit{ font-size:48px; }
+      .books-row { gap:24px; }
+    }
+    /* ---------- black hero & FAQ tweaks ---------- */
+
+/* Make the main black-hero heading bolder + larger on desktop */
+/* ---------- black hero & FAQ tweaks (REPLACEMENT) ---------- */
+
+/* big black-hero heading — match the heavy round font in image 2 */
+.black-hero-head {
+  font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, 
+               "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  font-size: 12px;    
+  line-height: 1.25;
+  letter-spacing: -0.3px;
+  margin: 8px 0 6px;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .black-hero-head { 
+    font-size: 14px; 
+    letter-spacing: -0.4px;
+  }
+}
+
+
+
+
+/* target only that sentence inside the black hero */
+.hero-inline-special {
+  /* font family you asked earlier (heavy rounded look from image 2) */
+  font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 800;
+
+  /* size adjustments (tweak numbers down if you want it smaller) */
+  font-size: 28px;        /* desktop-ish default - reduce if necessary */
+  line-height: 1.08;
+  letter-spacing: -0.6px;
+
+  /* color (use yellow: FACC15) */
+  color: #FACC15;
+
+  /* keep centered and allow wrapping nicely */
+  display: inline-block;
+  text-align: center;
+  max-width: 900px;       /* prevents it from stretching too wide */
+  width: 100%;
+}
+
+/* responsive sizing - adjust breakpoints if needed */
+@media (min-width: 768px) {
+  .hero-inline-special { font-size: 38px; /* larger on desktop */ }
+}
+@media (max-width: 420px) {
+  .hero-inline-special { font-size: 20px; letter-spacing: -0.2px; }
+}
+
+
+
+
+/* small body line under heading — increased gap and lighter feel */
+.black-hero-sub {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-top: 20px;         /* bigger gap requested */
+  color: #D1D5DB;
+  text-align: center;
+  max-width: 820px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* CTA stack */
+.black-cta-group { display:flex; flex-direction:column; gap:18px; align-items:center; max-width:420px; margin:18px auto 0; }
+.black-cta-group a { padding:14px 22px; border-radius:999px; font-weight:700; text-decoration:none; display:inline-flex; justify-content:center; align-items:center; width:100%; box-sizing:border-box; }
+
+/* heavy primary pill */
+.black-cta-group a.order-now {
+  background: var(--ash-900);
+  color:#fff;
+  box-shadow: 0 26px 50px rgba(2,6,23,0.45);
+}
+
+/* whatsapp pill */
+.black-cta-group a.whatsapp {
+  background:#25D366;
+  color:#fff;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* ================= FAQ (white rounded cards matching image 4) ================= */
+
+/* wrapper keeps them centered and constrained */
+
+
+/* hide default marker */
+
+/* ================= FAQ (clean on black background; white text; no white containers) ================= */
+
+/* wrapper keeps them centered and constrained */
+.faq-black-wrapper { max-width:820px; margin:22px auto 8px; padding:0 12px; }
+
+/* each question: remove white card — keep spacing only */
+.faq-black-wrapper details {
+  background: transparent;    /* no white box */
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 20px;
+  box-shadow: none;
+  overflow: visible;
+}
+
+/* style the toggler: large white text on black, full-width look */
+.faq-black-wrapper summary {
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 20px;
+  color: #ffffff;           /* white text */
+  list-style: none;
+  outline: none;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* left-align text like your reference */
+  position: relative;
+  border-radius: 8px;       /* small rounding for subtle feel (optional) */
+  background: transparent;  /* no white background */
+}
+
+/* hide default marker */
+.faq-black-wrapper summary::-webkit-details-marker { display:none; }
+
+/* add a chevron to the right (white/soft) and rotate on open */
+.faq-black-wrapper summary::after {
+  content: "▾";
+  position: absolute;
+  right: 18px;
+  font-size: 18px;
+  transition: transform 240ms ease, color 160ms ease;
+  color: rgba(255,255,255,0.85);
+}
+.faq-black-wrapper details[open] summary::after { transform: rotate(180deg); color: rgba(255,255,255,1); }
+
+/* thin divider under each question to mimic separation */
+.faq-black-wrapper summary + .answer,
+.faq-black-wrapper summary + * {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* answer area: white-ish text on black background with padding */
+.faq-black-wrapper .answer {
+  max-height: 0;
+  opacity: 0;
+  padding: 0 18px;
+  transition: max-height 320ms ease, opacity 260ms ease, padding 260ms ease;
+  overflow: hidden;
+  color: #E5E7EB;          /* slightly off-white for readability */
+  background: transparent;
+}
+
+/* when open: reveal the answer */
+.faq-black-wrapper details[open] .answer {
+  max-height: 500px;
+  opacity: 1;
+  padding: 14px 18px 22px;
+}
+
+/* small inline CTA inside answers */
+.faq-black-wrapper .small-cta {
+  display: inline-block;
+  margin-left: 6px;
+  color: #F3F4F6;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* center the FAQ heading in dark area */
+.faq-black-wrapper h4 {
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 16px;
+  color: #fff;
+  font-weight: 800;
+}
+
+/* responsive tweaks */
+@media (max-width: 420px){
+  .faq-black-wrapper summary { font-size: 16px; padding: 14px 16px; }
+  .faq-black-wrapper .answer { font-size: 14px; }
+}
+
+/* legal / company line after FAQs (small, muted) */
+.legal-line {
+  color:#9CA3AF;
+  font-size:12px;
+  text-align:center;
+  margin-top:18px;
+  padding:12px 6px;
+}
+
+/* end replacement */
+
+  </style>
+</head>
+<body>
+
+  <div class="relative min-h-screen">
+
+    <!-- Top thin ribbon -->
+    <div class="bg-white/90">
+      <div class="max-w-xl mx-auto px-4 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="text-sm font-semibold" style="color:var(--ash-900)">Instant Delivery • Trusted by 4,000+ students</div>
+          <div class="badge">Handwritten • Faculty-reviewed</div>
+        </div>
+        <div class="text-xs" style="color:var(--soft-ink)">Secure payments • Instant link</div>
+      </div>
+    </div>
+
+    <!-- Prominent dark timer band under ribbon -->
+    <div class="timer-band">
+      <div class="max-w-xl mx-auto px-4 py-6 text-center">
+        <div class="text-sm text-white/90 mb-2">⚡ Limited 1-1 seats (7/30) for <strong>November batch</strong></div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="timer-digit" id="bigTimer">00:00:00</div>
+          <div class="text-sm text-white/70">Applications close in <span id="daysText">0 days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+      <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="text-xl font-bold" style="color:var(--ash-900)">iiHub LLP</div>
+          <div class="text-xs" style="color:var(--soft-ink)">Handwritten Notes</div>
+        </div>
+        <div class="text-xs" style="color:var(--soft-ink)">Trusted by 4k+</div>
+      </div>
+    </header>
+
+    <main class="max-w-xl mx-auto px-4 pb-40">
+
+      <!-- HERO -->
+      <section class="pt-6 pb-4 relative">
+        <div>
+          <div class="mb-2 badge">Handwritten by toppers • Faculty-reviewed</div>
+
+          <h1 class="mt-1 text-3xl font-extrabold leading-tight" style="color:var(--ash-900)">Revise JEE 2026 — <span class="bg-white/60 px-1">Smarter, Not Harder</span></h1>
+          <p class="mt-2 text-sm" style="color:var(--soft-ink)">One-shot revision notes for Maths, Physics & Chemistry — handwritten by toppers, reviewed by faculty.</p>
+
+          <div class="mt-4 flex flex-col items-center">
+            <div class="w-64 h-64 relative">
+              <img id="heroImg" src="/images/hero.jpg" alt="notes mockup" class="w-full h-full object-cover rounded-xl shadow-soft transform -rotate-2" />
+              <div class="absolute left-4 bottom-4 bg-[#f3f4f6] px-3 py-2 rounded-lg shadow-soft text-left">
+                <div class="text-xs" style="color:var(--soft-ink)">Original price</div>
+                <div class="text-lg line-through" style="color:#9CA3AF">₹1,999</div>
+              </div>
+            </div>
+
+            <div class="w-full mt-4 space-y-3">
+              <button id="buyHero" class="w-full bg-[var(--ash-900)] text-white py-3 rounded-lg text-base font-semibold shadow">Unlock Full Notes — ₹799</button>
+              <button id="sampleHero" class="w-full border border-gray-300 py-3 rounded-lg text-[var(--ash-900)]">Download Free Sample</button>
+            </div>
+
+            <div class="mt-2 text-xs" style="color:var(--soft-ink)">Less than 2 months left — revise fast.</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Strong price card (ash fill) -->
+      <section class="mt-4">
+        <div class="bg-[var(--ash-fill)] rounded-xl p-5 shadow-soft flex items-center justify-between">
+          <div>
+            <div class="text-sm" style="color:var(--soft-ink)">Original price</div>
+            <div class="text-lg line-through" style="color:#9CA3AF">₹1,999</div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs" style="color:var(--soft-ink)">Limited-time price</div>
+            <div class="text-3xl font-extrabold" style="color:var(--ash-900)">₹799</div>
+            <div class="text-sm" style="color:var(--soft-ink)">Save ₹1,200 (60% off)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHAT YOU GET: larger tiles -->
+      <section class="mt-6 what-you-get">
+        <div class="bg-white rounded-xl p-5 shadow-soft">
+          <h3 class="text-xl font-semibold" style="color:var(--ash-900)">What you get</h3>
+          <div class="mt-4 grid grid-cols-3 gap-4">
+            <div class="tile">
+              <div class="icon">📄</div>
+              <div class="text-sm font-semibold">PDF Format</div>
+            </div>
+            <div class="tile">
+              <div class="icon">✍️</div>
+              <div class="text-sm font-semibold">Handwritten</div>
+            </div>
+            <div class="tile">
+              <div class="icon">⏳</div>
+              <div class="text-sm font-semibold">Lifetime Access</div>
+            </div>
+            <div class="tile">
+              <div class="icon">📱</div>
+              <div class="text-sm font-semibold">Multi-device</div>
+            </div>
+            <div class="tile">
+              <div class="icon">⚡</div>
+              <div class="text-sm font-semibold">Instant Deliver</div>
+            </div>
+            <div class="tile">
+              <div class="icon">🧠</div>
+              <div class="text-sm font-semibold">Mind Maps</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WHAT'S INCLUDED (stronger list) -->
+      <section class="mt-6 whats-included">
+        <div class="rounded-xl overflow-hidden">
+          <div class="bg-[var(--ash-900)] p-3 text-white font-semibold">WHAT'S INCLUDED?</div>
+          <div class="bg-white p-6 space-y-3 shadow-soft">
+            <ul class="included-list">
+              <li>Short Notes & Mind Maps (Maths, Physics, Chemistry)</li>
+              <li>Formula Book & One-liners</li>
+              <li>Toppers’ Handwritten Notes</li>
+              <li>Expected / Repeated Questions</li>
+              <li>Important Diagrams & Numerical Shortcuts</li>
+              <li>Chapter-wise Last-minute Revision Pages</li>
+              <li>Instant Google-Drive delivery (PDF)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trust box (25,000+) with ash fill -->
+      <section class="mt-6">
+        <div class="trust-box">
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+          <div>
+            <div class="title">25,000+ Satisfied Aspirants</div>
+            <div class="sub">Quality Guaranteed • Trusted Seller • Best Service</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results heading (outside card) -->
+      <div class="results-heading max-w-xl mx-auto px-0">
+        <h3>🏆 Results & Success Stories</h3>
+        <a id="seeMoreBtn" href="javascript:void(0)">See more</a>
+      </div>
+
+      <!-- Results cards container (card holds the horizontal scroll) -->
+      <section class="card mt-2">
+        <div class="results-grid" id="resultsScroll">
+          <!-- Card 1 -->
+          <div class="result-card">
+            <img src="/images/student1.jpg" class="photo" alt="Student photo 1" />
+            <div class="body">
+              <div class="name">Sri Charan</div>
+              <div class="role">IIT Bombay (Computer Science)</div>
+              <div class="quote">“Used the one-shot revision pages & formula book — last month revision saved 3 weeks.”</div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="result-card">
+            <img src="/images/student2.jpg" class="photo" alt="Student photo 2" />
+            <div class="body">
+              <div class="name">Ananya R</div>
+              <div class="role">AIR 432</div>
+              <div class="quote">“Clear diagrams and concise formulas made revision quick & effective.”</div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="result-card">
+            <img src="/images/student3.jpg" class="photo" alt="Student photo 3" />
+            <div class="body">
+              <div class="name">Rahul K</div>
+              <div class="role">JEE Advanced - Topper</div>
+              <div class="quote">“Formula book and mind maps helped me solve numericals faster.”</div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="result-card">
+            <img src="/images/student4.jpg" class="photo" alt="Student photo 4" />
+            <div class="body">
+              <div class="name">Parent Review</div>
+              <div class="role">Mother — Hyderabad</div>
+              <div class="quote">“Instant delivery + clear notes — my child improved confidence quickly.”</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 'See more' modal container (hidden until clicked) -->
+      <div id="moreModalRoot"></div>
+
+      <!-- Video testimonial -->
+      <section class="mt-6 bg-white p-4 rounded-xl shadow-soft">
+        <h4 class="font-semibold">Hear from a real student</h4>
+        <p class="text-xs" style="color:var(--soft-ink)">Watch a short clip — a student who used these notes and improved fast.</p>
+        <div class="mt-3">
+          <video id="studentVideo" controls playsinline poster="/images/video-poster.jpg" class="w-full rounded">
+            <source src="/videos/student-testimonial.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </section>
+
+      <!-- ====== BOOK SHOWCASE (three vertical books) ====== -->
+      <!-- ====== BOOK SHOWCASE + RIGHT-SIDED DETAILS (replaced to match image 2) ====== -->
+<section class="mt-6">
+    <div class="card p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        <!-- LEFT: large book / bundle image -->
+        <div class="w-full">
+          <div class="rounded-xl overflow-hidden shadow-soft" style="background:#fff;">
+            <img src="/images/revision-bundle-wide.jpg" alt="Revision Bundle book" style="width:100%; height:auto; display:block; object-fit:cover;"/>
+          </div>
+        </div>
+  
+        <!-- RIGHT: subject list + price box + CTAs -->
+        <div class="w-full flex flex-col justify-between">
+          <div>
+            <h3 class="text-2xl font-extrabold" style="color:var(--ash-900);">Maths</h3>
+            <p class="mt-2 text-sm" style="color:var(--soft-ink)">Formulas · Shortcuts · Problem-solving quick hacks</p>
+  
+            <h3 class="mt-6 text-2xl font-extrabold" style="color:var(--ash-900);">Physics</h3>
+            <p class="mt-2 text-sm" style="color:var(--soft-ink)">One-shot revision pages · Diagrams & key numericals</p>
+  
+            <h3 class="mt-6 text-2xl font-extrabold" style="color:var(--ash-900);">Chemistry</h3>
+            <p class="mt-2 text-sm" style="color:var(--soft-ink)">Memory hacks · Reaction flow-charts · Quick rules</p>
+          </div>
+  
+          <!-- Price card and CTAs (kept in right column, sticky-ish look) -->
+          <div class="mt-6 md:mt-8">
+            <div class="price-panel rounded-xl p-4">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <div class="text-xs" style="color:var(--soft-ink)">Original price</div>
+                  <div class="line-through text-sm" style="color:#9CA3AF">₹1,999</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-xs" style="color:var(--soft-ink)">Limited-time price</div>
+                  <div class="text-3xl font-extrabold" style="color:var(--ash-900);">₹799</div>
+                  <div class="text-sm" style="color:var(--soft-ink)">Save ₹1,200 (60% off)</div>
+                </div>
+              </div>
+  
+              <!-- CTAs (same row as image 2) -->
+              <!-- CTAs: horizontal always, primary left, secondary right -->
+<!-- CTAs: horizontal always, primary left, secondary right -->
+<!-- stacked CTAs: primary full-width above, secondary below -->
+<div class="mt-4 cta-col">
+    <a id="checkoutBtnRight"
+       href="https://rzp.io/rzp/mJ2SF9tm"
+       target="_blank" rel="noopener"
+       aria-label="Buy revision notes — opens Razorpay in new tab"
+       class="inline-flex items-center justify-center rounded-lg py-3 px-6 font-semibold shadow-lg no-underline text-white"
+       style="background:var(--ash-900); width:100%; display:inline-flex; text-align:center;">
+      Unlock Full Notes — ₹799
+    </a>
+  
+    <a id="whatsappBtnRight"
+       href="https://wa.me/918639221271?text=Hi%20iiHub%20I%20need%20help%20with%20notes"
+       target="_blank" rel="noopener"
+       aria-label="Chat on WhatsApp with iiHub"
+       class="inline-flex items-center justify-center rounded-lg py-3 px-5 font-semibold no-underline"
+       style="background:#25D366; color:#fff; border:1px solid rgba(0,0,0,0.04); width:100%; display:inline-flex; text-align:center;">
+      Chat on WhatsApp
+    </a>
+  </div>
+  
+  
+  
+              
+  
+              <div class="mt-3 text-xs" style="color:var(--soft-ink)">Money-back guarantee if files are corrupted • Secure payments</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ====== end replacement ====== -->
+  
+      <!-- ====== end book showcase ====== -->
+
+    <!-- ====== end book showcase ====== -->
+    
+    <!-- >>> Insert NEW BLACK HERO + TIMER (paste this block here) -->
+    <!-- >>> Insert NEW BLACK HERO + TIMER (updated) -->
+<section class="mt-6" style="background:#0b0b0b; color:#fff;">
+    <div class="max-w-xl mx-auto px-4 py-10 text-center">
+      <div style="color:#F3F4F6; font-weight:700; margin-bottom:8px; opacity:0.95; font-size:14px;">
+        ⚡ Limited — Only 250 IIT-JEE Revision Bundles Left
+      </div>
+  
+      <!-- big timer -->
+      <div style="margin:8px 0 18px;">
+        <div class="timer-digit" id="bigTimerFAQ" style="background:#fff; color:var(--danger); display:inline-block; padding:14px 22px; border-radius:10px; font-size:36px; font-weight:800; min-width:160px; box-shadow:0 8px 30px rgba(0,0,0,0.25);">
+          00:00:00
+        </div>
+        <div style="margin-top:8px; color:#E5E7EB; font-size:14px;">Offer ends in <span id="daysTextFAQ">0 days</span></div>
+      </div>
+  
+      <!-- headline (now uses class so your CSS can style it) -->
+      <div class="black-hero-head" style="margin:6px 0 10px;">
+        <span class="hero-inline-special">Get the exact IIT-JEE notes toppers used — one powerful revision bundle to boost your JEE score.</span>
+      </div>
+      
+  
+      <!-- subline -->
+      <div class="black-hero-sub">
+        Exam-ready notes, formulas and quick-solve tips — perfect for last-month revision.
+      </div>
+  
+      <!-- stacked CTAs (now uses the class that applies gap + heavier pills) -->
+      <div class="black-cta-group" style="margin-top:18px;">
+        <a id="orderNowFAQ"
+           href="https://rzp.io/rzp/mJ2SF9tm"
+           target="_blank" rel="noopener"
+           aria-label="Order notes — opens Razorpay in new tab"
+           class="order-now"
+           style="display:inline-flex; align-items:center; justify-content:center; color:#fff;">
+          Order Now — ₹799
+        </a>
+  
+        <a id="whatsappFAQ"
+           href="https://wa.me/918639221271?text=Hi%20iiHub%20I%20need%20help%20with%20notes"
+           target="_blank" rel="noopener"
+           aria-label="Chat on WhatsApp with iiHub"
+           class="whatsapp"
+           style="display:inline-flex; align-items:center; justify-content:center;">
+          Chat on WhatsApp
+        </a>
+      </div>
+  
+      <div style="margin-top:14px; color:#9CA3AF; font-size:13px;">
+        Money-back guarantee if files are corrupted • Secure payments
+      </div>
+  
+      <!-- FAQs: put details inside faq-black-wrapper so CSS/JS apply -->
+      <div class="faq-black-wrapper">
+        <h4 style="margin-top:22px">Frequently Asked Questions</h4>
+      
+        <details>
+          <summary>1. Are these handwritten by toppers?</summary>
+          <div class="answer">
+            <p style="margin:0">Yes — handwritten by toppers and reviewed by iiHub faculty. Each note is checked for clarity and exam-utility before release.</p>
+            <a class="small-cta" href="mailto:hello@iihub.co">Contact support</a>
+          </div>
+        </details>
+      
+        <details>
+          <summary>2. Will I receive all 3 subjects?</summary>
+          <div class="answer">
+            <p style="margin:0">Yes — the bundle includes Maths, Physics and Chemistry — chapter-wise last-minute sheets and formula pages for each subject.</p>
+          </div>
+        </details>
+      
+        <details>
+          <summary>3. How will I receive the notes?</summary>
+          <div class="answer">
+            <p style="margin:0">Instant email delivery with a secure Google Drive link after successful payment. You can download on any device.</p>
+          </div>
+        </details>
+      
+        <details>
+          <summary>4. Can I request a refund or replacement?</summary>
+          <div class="answer">
+            <p style="margin:0">If a file is corrupted or link fails, we provide a full money-back or replacement within 24 hours — just email us at support or use WhatsApp chat.</p>
+          </div>
+        </details>
+      
+        <details>
+          <summary>5. Who benefits the most from these notes?</summary>
+          <div class="answer">
+            <p style="margin:0">Students doing last-month revision, aspirants wanting concise formula sheets and toppers’ tips — also useful for quick concept refresh before mocks.</p>
+          </div>
+        </details>
+      </div>
+      
+        
+  
+      <!-- legal / registration line shown under FAQs -->
+      <div class="legal-line">
+        © 2017 iiTuitions Hub LLP — All rights reserved • Registered under Ministry of Corporate Affairs, Govt. of India
+      </div>
+    </div>
+  </section>
+  <!-- <<< end NEW BLACK HERO + TIMER (updated) -->
+  
+       
+       
+ 
+    <!-- <<< end NEW BLACK HERO + TIMER -->
+    
+    <!-- FAQ -->
+    
+
+      
+
+      <!-- Footer -->
+     
+
+    </main>
+
+    <!-- Sticky bottom bar (mobile) -->
+    <div class="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg z-50">
+      <div class="max-w-xl mx-auto flex gap-2 p-2">
+        <button id="stickyBuy" class="flex-1 bg-[var(--ash-900)] text-white py-3 rounded-lg font-semibold">Buy All 3 — ₹799</button>
+        <button id="stickySampleBtn" class="w-28 border border-gray-300 py-3 rounded-lg" style="color:var(--ash-900)">Sample</button>
+      </div>
+    </div>
+
+    <!-- Floating social -->
+    <div class="social-float" aria-hidden="true">
+      <a class="social-btn" href="https://www.instagram.com/iituitions?igsh=NDB4Mmw3MjhmY2Fj&utm_source=qr" target="_blank" title="Instagram">📸</a>
+      <a class="social-btn" href="https://wa.me/918639221271?text=Hi%20I%20need%20help%20with%20JEE%20notes" target="_blank" title="WhatsApp">💬</a>
+      <a class="social-btn" href="#" title="More">⭐</a>
+    </div>
+
+    <!-- Mini purchase popup (auto) -->
+    <div id="purchasePopup" class="fixed left-4 bottom-24 bg-white p-3 rounded-xl shadow-lg hidden z-50" style="width:calc(100% - 96px);max-width:360px">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 bg-[#f3f4f6] rounded"></div>
+        <div>
+          <div class="text-sm font-semibold">Ananya from Coimbatore</div>
+          <div class="text-xs" style="color:var(--soft-ink)">just purchased Maths + Chemistry — 10 minutes ago</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modals root -->
+    <div id="modalRoot"></div>
+    <div id="bookModalRoot"></div>
+    <div id="moreModalRoot"></div>
+
+  </div>
+
+<script>
+  // Set year
+  document.getElementById('year').innerText = new Date().getFullYear();
+
+  // Countdown to next midnight by default (change target if you want specific date/time)
+  // ========= Countdown (shared, configurable target) =========
+// Set a single TARGET_DATE for both timers. Change this string to the real sale end date/time.
+// Example: '2025-12-15T23:59:59' (ISO format)
+// ========= Countdown (shared, configurable target) =========
+// Set TARGET_DATE to the real sale end date/time (ISO string). Example:
+// const TARGET_DATE = new Date('2025-12-15T23:59:59');
+const TARGET_DATE = new Date('2025-12-31T23:59:59'); // <-- change this
+
+function getCountdownToTarget(target){
+  const now = new Date();
+  const diff = Math.max(0, target - now);
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hrs  = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const secs = Math.floor((diff % (1000*60)) / 1000);
+  return { days, hrs, mins, secs };
+}
+function two(n){ return String(n).padStart(2,'0'); }
+
+function refreshTimers(){
+  const c = getCountdownToTarget(TARGET_DATE);
+  const hms = two(c.hrs) + ':' + two(c.mins) + ':' + two(c.secs);
+
+  // top band timer
+  const elTop = document.getElementById('bigTimer');
+  if(elTop) elTop.innerText = hms;
+  const dTop = document.getElementById('daysText');
+  if(dTop) dTop.innerText = (c.days <= 1 ? c.days + ' day' : c.days + ' days');
+
+  // hero FAQ timer
+  const elFAQ = document.getElementById('bigTimerFAQ');
+  if(elFAQ) elFAQ.innerText = hms;
+  const dFAQ = document.getElementById('daysTextFAQ');
+  if(dFAQ) dFAQ.innerText = (c.days <= 1 ? c.days + ' day' : c.days + ' days');
+}
+
+// initial + interval
+refreshTimers();
+setInterval(refreshTimers, 1000);
+
+// ---------- FAQ accordion behaviour (only one open at a time) ----------
+(function(){
+  const faqWrapper = document.querySelector('.faq-black-wrapper');
+  if(!faqWrapper) return;
+
+  const detailsList = Array.from(faqWrapper.querySelectorAll('details'));
+
+  // prepare summary accessibility and keyboard
+  detailsList.forEach(d => {
+    const s = d.querySelector('summary');
+    if(s){
+      s.setAttribute('tabindex','0');
+      s.setAttribute('role','button');
+      s.addEventListener('keydown', (ev) => {
+        if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); s.parentElement.toggleAttribute('open'); s.click(); }
+      });
+    }
+  });
+
+  // ensure only one open at a time
+  detailsList.forEach(d => {
+    d.addEventListener('toggle', () => {
+      if(d.open){
+        detailsList.forEach(other => { if(other !== d) other.open = false; });
+      }
+    });
+  });
+
+  // wrap non-summary children into .answer for animation (if not already)
+  detailsList.forEach(d => {
+    const nonSummaries = Array.from(d.children).filter(c => c.tagName.toLowerCase() !== 'summary');
+    if(nonSummaries.length === 0) return;
+    // if already grouped, skip
+    if(nonSummaries.length === 1 && nonSummaries[0].classList.contains('answer')) return;
+
+    // create wrapper and move nodes
+    const wrapper = document.createElement('div');
+    wrapper.className = 'answer';
+    nonSummaries.forEach(node => wrapper.appendChild(node));
+    d.appendChild(wrapper);
+  });
+
+  // optionally open first FAQ by default for clarity (comment out if undesired)
+  // if(detailsList[0]) detailsList[0].open = true;
+
+})();
+
+
+ 
+
+
+ 
+  
+
+ 
+
+// ---------- Bind new black-hero buttons to existing flows ----------
+const orderNowFAQ = document.getElementById('orderNowFAQ');
+if(orderNowFAQ){
+  // if you want the Razorpay link to open directly in a new tab keep default; to show modal checkout use this:
+  orderNowFAQ.addEventListener('click', function(e){
+    e.preventDefault(); // prevent following external href
+    openCheckout();     // opens the same modal checkout you already use
+  });
+}
+
+const whatsappFAQ = document.getElementById('whatsappFAQ');
+if(whatsappFAQ) whatsappFAQ.addEventListener('click', ()=> {
+  window.location.href = 'https://wa.me/918639221271?text=Hi%20iiHub%20I%20need%20help%20with%20notes';
+});
+
+// Accessibility: allow keyboard activation (Enter) for order button
+if(orderNowFAQ) orderNowFAQ.setAttribute('role','button');
+if(whatsappFAQ) whatsappFAQ.setAttribute('role','button');
+
+
+  // Helpers to open/close modal
+  function openModal(html){
+    const root = document.getElementById('modalRoot');
+    root.innerHTML = '';
+    const backdrop = document.createElement('div');
+    backdrop.className = 'modal-backdrop';
+    backdrop.innerHTML = '<div class="modal-card" role="dialog" aria-modal="true">' + html + '</div>';
+    backdrop.addEventListener('click', (e)=>{ if(e.target===backdrop) closeModal(); });
+    document.body.appendChild(backdrop);
+    root.appendChild(backdrop);
+  }
+  function closeModal(){ const root = document.getElementById('modalRoot'); root.innerHTML = ''; }
+
+  // Lightbox for books
+  function openImageModal(src){
+    const root = document.getElementById('bookModalRoot');
+    root.innerHTML = '';
+    const backdrop = document.createElement('div');
+    backdrop.style.position = 'fixed';
+    backdrop.style.inset = '0';
+    backdrop.style.background = 'rgba(0,0,0,0.6)';
+    backdrop.style.display = 'flex';
+    backdrop.style.alignItems = 'center';
+    backdrop.style.justifyContent = 'center';
+    backdrop.style.zIndex = 1200;
+    backdrop.onclick = function(e){ if(e.target === backdrop){ root.innerHTML = ''; } };
+
+    const card = document.createElement('div');
+    card.style.maxWidth = '880px';
+    card.style.width = '92%';
+    card.style.borderRadius = '10px';
+    card.style.overflow = 'hidden';
+    card.style.boxShadow = '0 30px 80px rgba(14,20,28,0.45)';
+    card.style.background = '#fff';
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.width = '100%';
+    img.style.height = 'auto';
+    img.alt = 'Book preview';
+
+    const foot = document.createElement('div');
+    foot.style.display = 'flex';
+    foot.style.justifyContent = 'space-between';
+    foot.style.alignItems = 'center';
+    foot.style.padding = '12px';
+    const downloadBtn = document.createElement('a');
+    downloadBtn.textContent = 'Download image';
+    downloadBtn.href = src;
+    downloadBtn.download = '';
+    downloadBtn.style.background = 'transparent';
+    downloadBtn.style.border = '1px solid #e5e7eb';
+    downloadBtn.style.padding = '8px 12px';
+    downloadBtn.style.borderRadius = '8px';
+    downloadBtn.style.textDecoration = 'none';
+    downloadBtn.style.color = 'var(--ash-900)';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Close';
+    closeBtn.style.background = 'var(--ash-900)';
+    closeBtn.style.color = '#fff';
+    closeBtn.style.border = 'none';
+    closeBtn.style.padding = '8px 12px';
+    closeBtn.style.borderRadius = '8px';
+    closeBtn.onclick = ()=> root.innerHTML = '';
+
+    foot.appendChild(downloadBtn);
+    foot.appendChild(closeBtn);
+
+    card.appendChild(img);
+    card.appendChild(foot);
+    backdrop.appendChild(card);
+    root.appendChild(backdrop);
+  }
+
+  // Sample modal
+  const sampleHeroBtn = document.getElementById('sampleHero');
+  if(sampleHeroBtn) sampleHeroBtn.addEventListener('click', ()=> {
+    openModal(`
+      <div>
+        <h3 style="font-weight:700">Free Sample — Instant</h3>
+        <p style="color:var(--soft-ink);margin-top:6px">Enter your email to receive free sample pages (mock).</p>
+        <div style="margin-top:12px;display:grid;gap:8px">
+          <img src="/images/sample1.jpg" style="width:100%;border-radius:8px" alt="sample1"/>
+          <img src="/images/sample2.jpg" style="width:100%;border-radius:8px" alt="sample2"/>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <input id="sampleEmail" placeholder="Your email" style="flex:1;padding:10px;border:1px solid #e5e7eb;border-radius:8px" />
+          <button id="sendSampleBtn" style="background:var(--ash-900);color:#fff;padding:10px 14px;border-radius:8px;border:none">Send</button>
+        </div>
+      </div>
+    `);
+    setTimeout(()=> {
+      const btn = document.getElementById('sendSampleBtn');
+      if(btn) btn.addEventListener('click', ()=>{
+        const email = document.getElementById('sampleEmail').value || 'example@email.com';
+        alert('Mock: Sample link sent to ' + email);
+        closeModal();
+      });
+    },50);
+  });
+
+  // Checkout modal
+  function openCheckout(){
+    openModal(`
+      <div>
+        <h3 style="font-weight:700">Quick Checkout — ₹799</h3>
+        <p style="color:var(--soft-ink);margin-top:6px">Enter details to proceed (mock flow).</p>
+        <form id="checkoutForm" style="margin-top:12px;display:grid;gap:8px">
+          <input name="name" placeholder="Full name" required style="padding:10px;border:1px solid #e5e7eb;border-radius:8px" />
+          <input name="email" placeholder="Email" type="email" required style="padding:10px;border:1px solid #e5e7eb;border-radius:8px" />
+          <input name="phone" placeholder="Phone" required style="padding:10px;border:1px solid #e5e7eb;border-radius:8px" />
+          <div style="display:flex;gap:8px">
+            <button type="submit" style="flex:1;background:var(--ash-900);color:#fff;padding:10px;border-radius:8px;border:none">Pay ₹799</button>
+            <button type="button" id="cancelCheckout" style="flex:1;border:1px solid #e5e7eb;padding:10px;border-radius:8px">Cancel</button>
+          </div>
+        </form>
+      </div>
+    `);
+    setTimeout(()=> {
+      const f = document.getElementById('checkoutForm');
+      if(f) f.addEventListener('submit',(e)=>{ e.preventDefault(); alert('Mock payment success — download link sent'); closeModal(); });
+      const c = document.getElementById('cancelCheckout');
+      if(c) c.addEventListener('click', closeModal);
+    },50);
+  }
+
+  // Bind buy buttons
+  const buyHero = document.getElementById('buyHero');
+  if(buyHero) buyHero.addEventListener('click', openCheckout);
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  if(checkoutBtn) checkoutBtn.addEventListener('click', openCheckout);
+  const stickyBuy = document.getElementById('stickyBuy');
+  if(stickyBuy) stickyBuy.addEventListener('click', openCheckout);
+
+  // WhatsApp
+  const waBtn = document.getElementById('whatsappBtn');
+  if(waBtn) waBtn.addEventListener('click', ()=> { window.location.href = 'https://wa.me/918639221271?text=Hi%20iiHub%20I%20need%20help%20with%20notes'; });
+// Bind new right-column buttons to existing flows (use same handlers)
+
+
+const whatsappBtnRight = document.getElementById('whatsappBtnRight');
+if (whatsappBtnRight) whatsappBtnRight.addEventListener('click', ()=> { window.location.href = 'https://wa.me/918639221271?text=Hi%20iiHub%20I%20need%20help%20with%20notes'; });
+const checkoutBtnRight = document.getElementById('checkoutBtnRight');
+if (checkoutBtnRight) checkoutBtnRight.addEventListener('click', function(e){
+  e.preventDefault(); // prevents following the anchor href so modal shows instead
+  openCheckout();
+});
+
+  // See more reviews modal
+  const seeMoreBtn = document.getElementById('seeMoreBtn');
+  if(seeMoreBtn) seeMoreBtn.addEventListener('click', ()=> {
+    openModal(`
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="font-size:18px;font-weight:700">All Reviews</h3>
+          <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
+        </div>
+        <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+          <div style="background:var(--panel-bg);padding:12px;border-radius:10px;box-shadow:0 8px 30px rgba(14,20,28,0.05)">
+            <div style="font-weight:600">Aishwarya — AIIMS aspirant</div>
+            <div style="margin-top:8px;color:var(--soft-ink)">Best hand-written charts & quick recall sheets.</div>
+          </div>
+          <div style="background:var(--panel-bg);padding:12px;border-radius:10px;box-shadow:0 8px 30px rgba(14,20,28,0.05)">
+            <div style="font-weight:600">Manu — JEE Mains 600+</div>
+            <div style="margin-top:8px;color:var(--soft-ink)">Formula book saved me time during last 2 weeks.</div>
+          </div>
+          <div style="background:var(--panel-bg);padding:12px;border-radius:10px;box-shadow:0 8px 30px rgba(14,20,28,0.05)">
+            <div style="font-weight:600">Priya — NEET 98%</div>
+            <div style="margin-top:8px;color:var(--soft-ink)">Diagrams were so clear — great for biology too.</div>
+          </div>
+          <div style="background:var(--panel-bg);padding:12px;border-radius:10px;box-shadow:0 8px 30px rgba(14,20,28,0.05)">
+            <div style="font-weight:600">Karthik — Parent</div>
+            <div style="margin-top:8px;color:var(--soft-ink)">Good customer support and instant delivery link.</div>
+          </div>
+          <div style="background:var(--panel-bg);padding:12px;border-radius:10px;box-shadow:0 8px 30px rgba(14,20,28,0.05)">
+            <div style="font-weight:600">Sneha — Student</div>
+            <div style="margin-top:8px;color:var(--soft-ink)">Mind maps made revision fast and retention higher.</div>
+          </div>
+          <div style="background:var(--panel-bg);padding:12px;border-radius:10px;box-shadow:0 8px 30px rgba(14,20,28,0.05)">
+            <div style="font-weight:600">Vijay — Coach</div>
+            <div style="margin-top:8px;color:var(--soft-ink)">Solid bundle for last month crash course.</div>
+          </div>
+        </div>
+      </div>
+    `);
+  });
+
+  // Show mini purchase popup (simulate)
+  setTimeout(()=> {
+    const popup = document.getElementById('purchasePopup');
+    if(popup){ popup.classList.remove('hidden'); setTimeout(()=> popup.classList.add('hidden'), 12000); }
+  }, 4000);
+
+  // Auto-play student video when visible (muted)
+  const vid = document.getElementById('studentVideo');
+  if(vid){
+    const obs = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ vid.muted = true; vid.play().catch(()=>{}); } else { vid.pause(); }
+      });
+    }, {threshold:0.6});
+    obs.observe(vid);
+  }
+
+  // Hero image preview
+  const heroImg = document.getElementById('heroImg');
+  if(heroImg){
+    heroImg.addEventListener('click', ()=> {
+      openModal(`<div><img src="${heroImg.getAttribute('src')}" style="width:100%;border-radius:8px" /><div style="margin-top:12px;text-align:right"><button onclick="closeModal()" style="background:var(--ash-900);color:#fff;padding:8px 12px;border-radius:8px;border:none">Close</button></div></div>`);
+    });
+  }
+
+  // accessibility: close on ESC
+  window.addEventListener('keydown', (e)=> { if(e.key === 'Escape') closeModal(); });
+
+</script>
+
+</body>
+</html>
