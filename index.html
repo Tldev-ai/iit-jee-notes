@@ -483,17 +483,29 @@
           <p class="mt-2 text-sm" style="color:var(--soft-ink)">One-shot revision notes for Maths, Physics & Chemistry — handwritten by toppers, reviewed by faculty.</p>
 
           <div class="mt-4 flex flex-col items-center">
-            <div class="w-80 h-[500px] relative">
-                <img id="heroImg"
-                     src="img1.jpg"
-                     alt="notes mockup"
-                     class="w-full h-full object-cover rounded-xl shadow-soft transform -rotate-2" />
-        
-                <div class="absolute left-4 bottom-4 bg-[#f3f4f6] px-3 py-2 rounded-lg shadow-soft text-left">
-                    <div class="text-xs" style="color:var(--soft-ink)">Original price</div>
-                    <div class="text-lg line-through" style="color:#9CA3AF">₹1,999</div>
-                </div>
+            <!-- bigger container, taller, no rotation to avoid cropping -->
+            <div class="w-[320px] sm:w-[350px] h-[560px] sm:h-[640px] relative">
+              <img id="heroImg"
+                   src="img1.jpg"
+                   alt="notes mockup"
+                   class="w-full h-full object-contain rounded-xl shadow-soft" />
             </div>
+          
+            <!-- price badge moved outside the image (below it) -->
+            <div class="mt-4 bg-[#f3f4f6] px-4 py-3 rounded-xl shadow-soft text-left w-fit mx-auto">
+              <div class="text-xs" style="color:var(--soft-ink)">Original price</div>
+              <div class="text-lg line-through" style="color:#9CA3AF">₹1,999</div>
+            </div>
+          
+            <a id="buyHero"
+               href="https://rzp.io/rzp/mJ2SF9tm"
+               target="_blank" rel="noopener"
+               class="w-full bg-[var(--ash-900)] text-white py-3 rounded-lg text-base font-semibold shadow text-center no-underline mt-4"
+               style="display:block;">
+              Unlock Full Notes — ₹799
+            </a>
+          </div>
+          
         
 
             
