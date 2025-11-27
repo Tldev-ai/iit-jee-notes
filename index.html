@@ -483,7 +483,7 @@
 
           <div class="mt-4 flex flex-col items-center">
             <div class="w-64 h-64 relative">
-              <img id="heroImg" src="img1.jpg" alt="notes mockup" class="w-full h-full object-cover rounded-xl shadow-soft transform -rotate-2" />
+              <img id="heroImg" src="i1.png" alt="notes mockup" class="w-full h-full object-cover rounded-xl shadow-soft transform -rotate-2" />
               <div class="absolute left-4 bottom-4 bg-[#f3f4f6] px-3 py-2 rounded-lg shadow-soft text-left">
                 <div class="text-xs" style="color:var(--soft-ink)">Original price</div>
                 <div class="text-lg line-through" style="color:#9CA3AF">₹1,999</div>
@@ -491,8 +491,17 @@
             </div>
 
             <div class="w-full mt-4 space-y-3">
-              <button id="buyHero" class="w-full bg-[var(--ash-900)] text-white py-3 rounded-lg text-base font-semibold shadow">Unlock Full Notes — ₹799</button>
-              <button id="sampleHero" class="w-full border border-gray-300 py-3 rounded-lg text-[var(--ash-900)]">Download Free Sample</button>
+              <img src="img1.jpg" alt="Notes preview"
+     class="w-full rounded-lg shadow-soft mb-3" />
+
+              <a id="buyHero"
+              href="https://rzp.io/rzp/mJ2SF9tm"
+              target="_blank" rel="noopener"
+              class="w-full bg-[var(--ash-900)] text-white py-3 rounded-lg text-base font-semibold shadow text-center no-underline"
+              style="display:block;">
+             Unlock Full Notes — ₹799
+           </a>
+           
             </div>
 
             <div class="mt-2 text-xs" style="color:var(--soft-ink)">Less than 2 months left — revise fast.</div>
@@ -881,7 +890,12 @@
 
 <script>
   // Set year
-  document.getElementById('year').innerText = new Date().getFullYear();
+  // Set year
+document.getElementById('year').innerText = new Date().getFullYear();
+
+// === RAZORPAY LINK (paste your link here) ===
+const RAZORPAY_LINK = 'https://rzp.io/rzp/mJ2SF9tm';
+
 
   // Countdown to next midnight by default (change target if you want specific date/time)
   // ========= Countdown (shared, configurable target) =========
@@ -1165,11 +1179,78 @@ if(whatsappFAQ) whatsappFAQ.setAttribute('role','button');
 
   // Bind buy buttons
   const buyHero = document.getElementById('buyHero');
-  if(buyHero) buyHero.addEventListener('click', openCheckout);
+  
   const checkoutBtn = document.getElementById('checkoutBtn');
   if(checkoutBtn) checkoutBtn.addEventListener('click', openCheckout);
   const stickyBuy = document.getElementById('stickyBuy');
   if(stickyBuy) stickyBuy.addEventListener('click', openCheckout);
+  // === Make all Buy buttons open Razorpay ===
+(function(){
+  const IDS = ['buyHero','checkoutBtnRight','orderNowFAQ','stickyBuy'];
+
+  IDS.forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+
+    el.addEventListener('click', function(e){
+      e.preventDefault();
+      window.open(RAZORPAY_LINK, '_blank', 'noopener');
+    });
+  });
+})();
+
+
+  // === Make HERO "Unlock Full Notes" go directly to Razorpay ===
+(function bindHeroToRzp(){
+  const buyHero = document.getElementById('buyHero');
+  if(!buyHero) return;
+
+  
+})();
+
+
+    // === FORCE all buy/order controls to open Razorpay (overrides modal) ===
+    (function bindRazorpayLink(){
+    const R_IDS = [
+      'buyHero',         // hero button (button)
+      'checkoutBtn',     // legacy anchor (if present)
+      'checkoutBtnRight',// right-panel anchor
+      'orderNowFAQ',     // black hero order button
+      'stickyBuy'        // mobile sticky button
+    ];
+
+    R_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if(!el) return;
+
+      // If it's an anchor (<a>) update href so right-click / new-tab works
+      if(el.tagName && el.tagName.toLowerCase() === 'a'){
+        el.href = RAZORPAY_LINK;
+        el.target = '_blank';
+        el.rel = 'noopener';
+        // remove any click handler that opens the modal (optional)
+        el.addEventListener('click', function redirectToRzp(e){
+          // allow normal navigation; keep listener so SPA handlers don't stop it
+          // no preventDefault here
+        });
+      } else {
+        // For buttons, make them navigate to Razorpay in new tab
+        el.addEventListener('click', function(e){
+          window.open(RAZORPAY_LINK, '_blank', 'noopener');
+        });
+      }
+    });
+
+    // Safe fallback: also attach a delegated click handler for any element with data-buy attribute
+    document.body.addEventListener('click', function(e){
+      const buyAttr = e.target.closest('[data-buy]');
+      if(buyAttr){
+        e.preventDefault();
+        window.open(RAZORPAY_LINK, '_blank', 'noopener');
+      }
+    }, {capture:false});
+  })();
+
 
   // WhatsApp
   const waBtn = document.getElementById('whatsappBtn');
@@ -1179,11 +1260,7 @@ if(whatsappFAQ) whatsappFAQ.setAttribute('role','button');
 
 const whatsappBtnRight = document.getElementById('whatsappBtnRight');
 if (whatsappBtnRight) whatsappBtnRight.addEventListener('click', ()=> { window.location.href = 'https://wa.me/918639221271?text=Hi%20iiHub%20I%20need%20help%20with%20notes'; });
-const checkoutBtnRight = document.getElementById('checkoutBtnRight');
-if (checkoutBtnRight) checkoutBtnRight.addEventListener('click', function(e){
-  e.preventDefault(); // prevents following the anchor href so modal shows instead
-  openCheckout();
-});
+
 
   // See more reviews modal
   const seeMoreBtn = document.getElementById('seeMoreBtn');
