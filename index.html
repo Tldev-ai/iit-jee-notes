@@ -191,58 +191,92 @@
 /* Make the main black-hero heading bolder + larger on desktop */
 /* ---------- black hero & FAQ tweaks (REPLACEMENT) ---------- */
 
-/* big black-hero heading — match the heavy round font in image 2 */
-.black-hero-head {
-  font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, 
-               "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-weight: 800;
-  font-size: 12px;    
-  line-height: 1.25;
-  letter-spacing: -0.3px;
-  margin: 8px 0 6px;
-  color: #FFFFFF;
+/* ===== FAQ — clean, centered container, left-aligned questions with chevrons on right ===== */
+/* ===== FAQ — left-aligned questions, chevron on right ===== */
+.faq-black-wrapper {
+  max-width: 820px;
+  margin: 22px auto 8px;
+  padding: 0 12px;
+}
+
+.faq-black-wrapper details {
+  background: transparent;
+  margin-bottom: 20px;
+  overflow: visible;
+}
+
+/* summary: full-width left-aligned text */
+/* ===== center FAQ question text, chevron at right ===== */
+
+
+/* hide default marker in WebKit */
+.faq-black-wrapper summary::-webkit-details-marker { display:none; }
+
+/* chevron placed at right (keeps alignment even with centered text) */
+.faq-black-wrapper summary::after {
+  content: "▾";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  transition: transform 240ms ease, color 160ms ease;
+}
+.faq-black-wrapper details[open] summary::after {
+  transform: translateY(-50%) rotate(180deg);
+  color: rgba(255,255,255,1);
+}
+
+
+
+/* separator and answer animation */
+.faq-black-wrapper summary + .answer,
+.faq-black-wrapper summary + * { border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+.faq-black-wrapper .answer {
+  max-height: 0;
+  opacity: 0;
+  padding: 0 18px;
+  transition: max-height 320ms ease, opacity 260ms ease, padding 260ms ease;
+  overflow: hidden;
+  color: #E5E7EB;
+  background: transparent;
+}
+.faq-black-wrapper details[open] .answer {
+  max-height: 520px;
+  opacity: 1;
+  padding: 14px 18px 22px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #E7E7E7;
+}
+
+/* FAQ heading */
+.faq-black-wrapper h4 {
+  font-size: 22px;
   text-align: center;
-}
-
-@media (min-width: 768px) {
-  .black-hero-head { 
-    font-size: 14px; 
-    letter-spacing: -0.4px;
-  }
-}
-
-
-
-
-/* target only that sentence inside the black hero */
-.hero-inline-special {
-  /* font family you asked earlier (heavy rounded look from image 2) */
-  font-family: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont,
-               "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin-bottom: 16px;
+  color: #fff;
   font-weight: 800;
-
-  /* size adjustments (tweak numbers down if you want it smaller) */
-  font-size: 28px;        /* desktop-ish default - reduce if necessary */
-  line-height: 1.08;
-  letter-spacing: -0.6px;
-
-  /* color (use yellow: FACC15) */
-  color: #FACC15;
-
-  /* keep centered and allow wrapping nicely */
-  display: inline-block;
-  text-align: center;
-  max-width: 900px;       /* prevents it from stretching too wide */
-  width: 100%;
 }
 
-/* responsive sizing - adjust breakpoints if needed */
-@media (min-width: 768px) {
-  .hero-inline-special { font-size: 38px; /* larger on desktop */ }
+/* small screens */
+@media (max-width: 420px){
+  .faq-black-wrapper summary { font-size: 16px; padding: 14px 16px; }
+  .faq-black-wrapper .answer { font-size: 14px; }
 }
-@media (max-width: 420px) {
-  .hero-inline-special { font-size: 20px; letter-spacing: -0.2px; }
-}
+
+
+
+
+
+
+/* ===== END REPLACEMENT ===== */
+
+
+
+
 
 
 
@@ -399,8 +433,17 @@
     <div class="bg-white/90">
       <div class="max-w-xl mx-auto px-4 py-2 flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <div class="text-sm font-semibold" style="color:var(--ash-900)">Instant Delivery • Trusted by 4,000+ students</div>
-          <div class="badge">Handwritten • Faculty-reviewed</div>
+            <div class="flex flex-col text-sm font-semibold leading-tight" style="color:var(--ash-900)">
+                <span>Instant Delivery</span>
+                <span class="mt-0.5 text-sm">Trusted by 4,000+ students</span>
+              </div>
+              
+              <div class="flex flex-col text-sm font-semibold leading-tight" style="color:var(--ash-900)">
+                <span>Handwritten</span>
+                <span class="mt-0.5 text-sm">Faculty-reviewed</span>
+            </div>
+            
+            
         </div>
         <div class="text-xs" style="color:var(--soft-ink)">Secure payments • Instant link</div>
       </div>
@@ -409,10 +452,10 @@
     <!-- Prominent dark timer band under ribbon -->
     <div class="timer-band">
       <div class="max-w-xl mx-auto px-4 py-6 text-center">
-        <div class="text-sm text-white/90 mb-2">⚡ Limited 1-1 seats (7/30) for <strong>November batch</strong></div>
+        <div class="text-sm text-white/90 mb-2">📘 Compulsory revision bundle for JEE 2026<strong> — recommended by toppers</strong></div>
         <div class="flex flex-col items-center gap-2">
           <div class="timer-digit" id="bigTimer">00:00:00</div>
-          <div class="text-sm text-white/70">Applications close in <span id="daysText">0 days</span></div>
+          <div class="text-sm text-white/70">AOnly a few hours left to claim this <span id="daysText">bundle</span></div>
         </div>
       </div>
     </div>
@@ -440,7 +483,7 @@
 
           <div class="mt-4 flex flex-col items-center">
             <div class="w-64 h-64 relative">
-              <img id="heroImg" src="/images/hero.jpg" alt="notes mockup" class="w-full h-full object-cover rounded-xl shadow-soft transform -rotate-2" />
+              <img id="heroImg" src="img1.jpg" alt="notes mockup" class="w-full h-full object-cover rounded-xl shadow-soft transform -rotate-2" />
               <div class="absolute left-4 bottom-4 bg-[#f3f4f6] px-3 py-2 rounded-lg shadow-soft text-left">
                 <div class="text-xs" style="color:var(--soft-ink)">Original price</div>
                 <div class="text-lg line-through" style="color:#9CA3AF">₹1,999</div>
@@ -687,7 +730,7 @@
 <section class="mt-6" style="background:#0b0b0b; color:#fff;">
     <div class="max-w-xl mx-auto px-4 py-10 text-center">
       <div style="color:#F3F4F6; font-weight:700; margin-bottom:8px; opacity:0.95; font-size:14px;">
-        ⚡ Limited — Only 250 IIT-JEE Revision Bundles Left
+        📘 Compulsory topper-grade notes for high-rank preparation
       </div>
   
       <!-- big timer -->
@@ -695,13 +738,16 @@
         <div class="timer-digit" id="bigTimerFAQ" style="background:#fff; color:var(--danger); display:inline-block; padding:14px 22px; border-radius:10px; font-size:36px; font-weight:800; min-width:160px; box-shadow:0 8px 30px rgba(0,0,0,0.25);">
           00:00:00
         </div>
-        <div style="margin-top:8px; color:#E5E7EB; font-size:14px;">Offer ends in <span id="daysTextFAQ">0 days</span></div>
+        <div style="margin-top:8px; color:#E5E7EB; font-size:14px;">Limited-time discount <span id="daysTextFAQ"> — don’t miss out</div>
       </div>
   
       <!-- headline (now uses class so your CSS can style it) -->
       <div class="black-hero-head" style="margin:6px 0 10px;">
-        <span class="hero-inline-special">Get the exact IIT-JEE notes toppers used — one powerful revision bundle to boost your JEE score.</span>
+        <span class="hero-inline-special" style="color:#FACC15;">
+          Get the exact IIT-JEE notes toppers used — one powerful revision bundle to boost your JEE score.
+        </span>
       </div>
+      
       
   
       <!-- subline -->
@@ -739,7 +785,7 @@
         <h4 style="margin-top:22px">Frequently Asked Questions</h4>
       
         <details>
-          <summary>1. Are these handwritten by toppers?</summary>
+          <summary> Are these handwritten by toppers?</summary>
           <div class="answer">
             <p style="margin:0">Yes — handwritten by toppers and reviewed by iiHub faculty. Each note is checked for clarity and exam-utility before release.</p>
             <a class="small-cta" href="mailto:hello@iihub.co">Contact support</a>
@@ -747,28 +793,28 @@
         </details>
       
         <details>
-          <summary>2. Will I receive all 3 subjects?</summary>
+          <summary> Will I receive all 3 subjects?</summary>
           <div class="answer">
             <p style="margin:0">Yes — the bundle includes Maths, Physics and Chemistry — chapter-wise last-minute sheets and formula pages for each subject.</p>
           </div>
         </details>
       
         <details>
-          <summary>3. How will I receive the notes?</summary>
+          <summary> How will I receive the notes?</summary>
           <div class="answer">
             <p style="margin:0">Instant email delivery with a secure Google Drive link after successful payment. You can download on any device.</p>
           </div>
         </details>
       
         <details>
-          <summary>4. Can I request a refund or replacement?</summary>
+          <summary> Can I request a refund or replacement?</summary>
           <div class="answer">
             <p style="margin:0">If a file is corrupted or link fails, we provide a full money-back or replacement within 24 hours — just email us at support or use WhatsApp chat.</p>
           </div>
         </details>
       
         <details>
-          <summary>5. Who benefits the most from these notes?</summary>
+          <summary> Who benefits the most from these notes?</summary>
           <div class="answer">
             <p style="margin:0">Students doing last-month revision, aspirants wanting concise formula sheets and toppers’ tips — also useful for quick concept refresh before mocks.</p>
           </div>
@@ -844,7 +890,22 @@
 // ========= Countdown (shared, configurable target) =========
 // Set TARGET_DATE to the real sale end date/time (ISO string). Example:
 // const TARGET_DATE = new Date('2025-12-15T23:59:59');
-const TARGET_DATE = new Date('2025-12-31T23:59:59'); // <-- change this
+// ---------- TARGET DATE (correct) ----------
+/* Set the date/time you want the countdown to target.
+   Example: new Date('2025-12-20T18:29:59Z') or calculate relative like below. */
+   // ---------- TARGET DATE (correct) ----------
+/* Set the date/time you want the countdown to target.
+   Example: new Date('2025-12-20T18:29:59Z') or calculate relative like below. */
+let tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+tomorrow.setHours(23, 59, 59, 999);
+
+// Use the real variable 'tomorrow' as the target
+const TARGET_DATE = tomorrow;
+
+
+ // UTC time (example)
+ // <-- change this
 
 function getCountdownToTarget(target){
   const now = new Date();
@@ -875,8 +936,29 @@ function refreshTimers(){
 }
 
 // initial + interval
-refreshTimers();
-setInterval(refreshTimers, 1000);
+
+// Start timers only after DOM is ready and ensure TARGET_DATE is valid
+(function(){
+  // If TARGET_DATE is missing or invalid, default to end of today (safe fallback)
+  if (typeof TARGET_DATE === 'undefined' || !(TARGET_DATE instanceof Date) || isNaN(TARGET_DATE.getTime())) {
+    const fallback = new Date();
+    fallback.setHours(23,59,59,999);
+    window.TARGET_DATE = fallback;
+  }
+
+  function start() {
+    // run immediately and then every second
+    refreshTimers();
+    window.__ii_timer_interval__ = setInterval(refreshTimers, 1000);
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    start();
+  } else {
+    document.addEventListener('DOMContentLoaded', start);
+  }
+})();
+
 
 // ---------- FAQ accordion behaviour (only one open at a time) ----------
 (function(){
