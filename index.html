@@ -702,89 +702,97 @@
 
   /* thumbnail box adaptive sizing */
   <!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
-<!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
-<!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
+<!-- Inline styles specific to sample thumbnails (bigger + clearer) -->
 <style>
-  /* Row: horizontal scroll, no gap between cards */
-  .sample-row {
+  .sample-row{
     display:flex;
-    gap:0; /* no gap between slides */
+    gap:12px;
     overflow-x:auto;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
-    padding:0;
+    padding:12px 8px;
     margin:0;
     scroll-behavior: smooth;
-    -ms-overflow-style: none;  /* hide scrollbar IE/Edge */
-    scrollbar-width: none;     /* hide scrollbar Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  .sample-row::-webkit-scrollbar { display:none; }
+  .sample-row::-webkit-scrollbar{ display:none; }
 
-  /* Each book-card is the same fixed size */
-  .book-card {
-    flex: 0 0 auto;           /* don't stretch; keep fixed */
-    width: 260px;             /* thumbnail box width (change as needed) */
-    min-width: 260px;
-    height: 340px;            /* thumbnail box height (change as needed) */
+  /* Each card: big on mobile (80vw), fixed bigger on desktop */
+  .book-card{
+    flex: 0 0 auto;
+    width: 80vw;            /* mobile: almost full viewport width for clearer pages */
+    min-width: 80vw;
+    height: calc(80vw * 1.15); /* maintain an approx page aspect ratio */
     scroll-snap-align: start;
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-start;
     box-sizing:border-box;
     padding:0;
     margin:0;
   }
 
-  /* The visible thumbnail box (inner card) */
-  .sample-thumb {
+  /* inner thumbnail (visual frame) */
+  .sample-thumb{
     width: 100%;
-    height: calc(100% - 28px); /* leave space for the label below */
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    height: calc(100% - 36px); /* reserve space for label below */
+    display:block;
     overflow:hidden;
     background:var(--panel-bg);
-    border-radius:12px;
-    padding:6px;               /* small padding so image doesn't touch edges */
-    box-shadow: 0 10px 30px rgba(14,20,28,0.06);
+    border-radius:14px;
+    padding:6px;
+    box-shadow:0 18px 40px rgba(14,20,28,0.06);
+    position:relative;
   }
 
-  /* Image fits inside the fixed box without cropping or stretching */
-  .sample-thumb img {
+  /* IMPORTANT: use cover for clearer text (fills box, may crop edges).
+     If you want whole page visible instead, change `cover` -> `contain` */
+  .sample-thumb img{
     width:100%;
     height:100%;
-    object-fit: contain;      /* show entire page, preserve aspect ratio */
+    object-fit: cover;       /* recommended for clarity */
     object-position: center;
     display:block;
+    transform-origin:center;
     transition: transform 220ms ease;
   }
 
-  /* Optional hover zoom on desktop only (touch devices ignore) */
-  @media (hover: hover) {
-    .sample-thumb:hover img { transform: scale(1.03); }
+  /* subtle zoom on hover for desktop */
+  @media(hover:hover){
+    .sample-thumb:hover img{ transform: scale(1.03); }
   }
 
-  /* Label under thumbnail */
-  .book-card > .text-xs {
+  /* label under thumbnail */
+  .book-card > .text-xs{
     display:block;
-    padding-top:6px;
+    padding-top:8px;
     text-align:center;
-    font-weight:600;
+    font-weight:700;
+    font-size:13px;
   }
 
-  /* Hide labels on very small screens to keep more visual area */
-  @media (max-width: 480px) {
-    .book-card { width: 220px; min-width:220px; height:300px; }
-    .book-card > .text-xs { display:none; }
+  /* Desktop: slightly larger fixed boxes for even clearer view */
+  @media(min-width:768px){
+    .book-card{ width:360px; min-width:360px; height:420px; }
+    .sample-thumb{ padding:10px; border-radius:12px; }
   }
 
-  /* If you want larger thumbnails on desktop, adjust these */
-  @media (min-width: 768px) {
-    .book-card { width: 300px; min-width:300px; height:380px; }
-    .sample-thumb { padding:8px; }
+  /* Very large screens: bump again */
+  @media(min-width:1200px){
+    .book-card{ width:420px; min-width:420px; height:480px; }
+  }
+
+  /* Small phones: slightly less tall so bottom bar doesn't overlap */
+  @media(max-width:380px){
+    .book-card{ width:86vw; min-width:86vw; height: calc(86vw * 1.1); }
+    .book-card > .text-xs{ display:none; } /* hide label to maximize image area */
   }
 </style>
+
+   
+  
 
 
 
