@@ -948,7 +948,7 @@ const SAMPLE_IMAGES = {
   // Open the "landing" modal with 3 subject tiles
   document.getElementById('seeSamplesBtn').addEventListener('click', ()=> openSamplesLanding());
 
-  function openSamplesLanding(){
+ function openSamplesLanding(){
   // Flatten SAMPLE_IMAGES while preserving defined order
   const allImages = [];
   Object.keys(SAMPLE_IMAGES).forEach(subject => {
@@ -979,17 +979,14 @@ const SAMPLE_IMAGES = {
     `;
   }).join('');
 
+  // Use a safe, generic heading (no undefined variable)
   const html = `
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center">
-         <h3 style="font-size:18px;font-weight:700;text-transform:capitalize;color:var(--ash-900)">${subject} — Sample Pages</h3>
-  <div>
-    <button onclick="openSamplesLanding()" style="background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px;border-radius:8px;cursor:pointer;color:var(--ash-900);margin-right:8px">Back</button>
-    <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
-  </div>
-        <div>
-          <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
-        </div>
+         <h3 style="font-size:18px;font-weight:700;text-transform:capitalize;color:var(--ash-900)">Sample Pages</h3>
+         <div>
+           <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
+         </div>
       </div>
 
       <div style="margin-top:12px;" class="sample-grid">
@@ -1000,6 +997,11 @@ const SAMPLE_IMAGES = {
 
   openModal(html);
 }
+
+  
+  }).join('');
+
+  
 
 
         
