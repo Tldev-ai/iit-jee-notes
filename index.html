@@ -698,35 +698,53 @@
 </section>
 
 <!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
-<style>
+
   /* thumbnail box adaptive sizing */
+  <!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
+<style>
+  /* Bigger, more readable thumbnails — less white padding and cover fit */
   .sample-thumb {
-    width: 140px;
-    height: 160px; /* fixed box height for neat grid; scales on larger screens via media query */
+    width: 200px;              /* bigger on small screens */
+    height: 240px;             /* taller so full page is readable */
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
     background:var(--panel-bg);
-    border-radius:10px;
-    padding:6px;
+    border-radius:12px;
+    padding:4px;               /* reduce inner padding so image is larger */
+    box-shadow: 0 10px 30px rgba(14,20,28,0.06);
+    cursor: pointer;
   }
+
+  /* Make image fill the thumbnail area while preserving readable crop */
   .sample-thumb img {
     width:100%;
     height:100%;
-    object-fit:contain; /* preserves full screenshot aspect ratio inside box */
+    object-fit:cover;          /* cover gives larger readable area than contain */
     display:block;
+    transform-origin:center;
+    transition: transform 220ms ease;
   }
 
-  /* responsive: larger thumbnail on wider screens */
+  /* subtle zoom on hover (desktop) */
+  .sample-thumb:hover img { transform: scale(1.03); }
+
+  /* responsive: even larger on wider screens */
+  @media(min-width:420px){
+    .sample-thumb { width:220px; height:280px; }
+  }
   @media(min-width:768px){
-    .sample-thumb { width:170px; height:200px; }
+    .sample-thumb { width:260px; height:320px; }
+    .sample-thumb img { object-position:center; }
   }
 
   /* ensure horizontal row is swipe-friendly */
   .sample-row { -webkit-overflow-scrolling: touch; overflow-x:auto; display:flex; gap:18px; padding-bottom:12px; }
-  .sample-row .book-card { min-width:140px; flex:0 0 auto; }
+  .sample-row .book-card { min-width:220px; flex:0 0 auto; }
 </style>
+
+
 
 <!-- Sample modal / gallery JS -->
 <script>
@@ -1244,66 +1262,91 @@ if(whatsappFAQ) whatsappFAQ.setAttribute('role','button');
   function closeModal(){ const root = document.getElementById('modalRoot'); root.innerHTML = ''; }
 
   // Lightbox for books
-  function openImageModal(src){
-    const root = document.getElementById('bookModalRoot');
-    root.innerHTML = '';
-    const backdrop = document.createElement('div');
-    backdrop.style.position = 'fixed';
-    backdrop.style.inset = '0';
-    backdrop.style.background = 'rgba(0,0,0,0.6)';
-    backdrop.style.display = 'flex';
-    backdrop.style.alignItems = 'center';
-    backdrop.style.justifyContent = 'center';
-    backdrop.style.zIndex = 1200;
-    backdrop.onclick = function(e){ if(e.target === backdrop){ root.innerHTML = ''; } };
+  // Lightbox for books (larger, up to 80vh so reading is comfortable)
+function openImageModal(src){
+  const root = document.getElementById('bookModalRoot');
+  root.innerHTML = '';
+  const backdrop = document.createElement('div');
+  backdrop.style.position = 'fixed';
+  backdrop.style.inset = '0';
+  backdrop.style.background = 'rgba(0,0,0,0.75)';
+  backdrop.style.display = 'flex';
+  backdrop.style.alignItems = 'center';
+  backdrop.style.justifyContent = 'center';
+  backdrop.style.zIndex = 1200;
+  backdrop.onclick = function(e){ if(e.target === backdrop){ root.innerHTML = ''; } };
 
-    const card = document.createElement('div');
-    card.style.maxWidth = '880px';
-    card.style.width = '92%';
-    card.style.borderRadius = '10px';
-    card.style.overflow = 'hidden';
-    card.style.boxShadow = '0 30px 80px rgba(14,20,28,0.45)';
-    card.style.background = '#fff';
+  const card = document.createElement('div');
+  card.style.maxWidth = '1100px';
+  card.style.width = '94%';
+  card.style.borderRadius = '12px';
+  card.style.overflow = 'hidden';
+  card.style.boxShadow = '0 30px 80px rgba(14,20,28,0.45)';
+  card.style.background = '#fff';
+  card.style.display = 'flex';
+  card.style.flexDirection = 'column';
+  card.style.alignItems = 'stretch';
 
-    const img = document.createElement('img');
-    img.src = src;
-    img.style.width = '100%';
-    img.style.height = 'auto';
-    img.alt = 'Book preview';
+  const imgWrap = document.createElement('div');
+  imgWrap.style.width = '100%';
+  imgWrap.style.maxHeight = '80vh'; /* keeps image within viewport */
+  imgWrap.style.overflow = 'auto';
+  imgWrap.style.background = '#fff';
+  imgWrap.style.display = 'flex';
+  imgWrap.style.alignItems = 'center';
+  imgWrap.style.justifyContent = 'center';
 
-    const foot = document.createElement('div');
-    foot.style.display = 'flex';
-    foot.style.justifyContent = 'space-between';
-    foot.style.alignItems = 'center';
-    foot.style.padding = '12px';
-    const downloadBtn = document.createElement('a');
-    downloadBtn.textContent = 'Download image';
-    downloadBtn.href = src;
-    downloadBtn.download = '';
-    downloadBtn.style.background = 'transparent';
-    downloadBtn.style.border = '1px solid #e5e7eb';
-    downloadBtn.style.padding = '8px 12px';
-    downloadBtn.style.borderRadius = '8px';
-    downloadBtn.style.textDecoration = 'none';
-    downloadBtn.style.color = 'var(--ash-900)';
+  const img = document.createElement('img');
+  img.src = src;
+  img.style.maxWidth = '100%';
+  img.style.maxHeight = '80vh';
+  img.style.height = 'auto';
+  img.alt = 'Sample page preview';
+  img.style.display = 'block';
 
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = 'Close';
-    closeBtn.style.background = 'var(--ash-900)';
-    closeBtn.style.color = '#fff';
-    closeBtn.style.border = 'none';
-    closeBtn.style.padding = '8px 12px';
-    closeBtn.style.borderRadius = '8px';
-    closeBtn.onclick = ()=> root.innerHTML = '';
+  const foot = document.createElement('div');
+  foot.style.display = 'flex';
+  foot.style.justifyContent = 'space-between';
+  foot.style.alignItems = 'center';
+  foot.style.padding = '12px';
+  foot.style.gap = '8px';
 
-    foot.appendChild(downloadBtn);
-    foot.appendChild(closeBtn);
+  const downloadBtn = document.createElement('a');
+  downloadBtn.textContent = 'Download';
+  downloadBtn.href = src;
+  downloadBtn.download = '';
+  downloadBtn.style.background = 'transparent';
+  downloadBtn.style.border = '1px solid #e5e7eb';
+  downloadBtn.style.padding = '8px 12px';
+  downloadBtn.style.borderRadius = '8px';
+  downloadBtn.style.textDecoration = 'none';
+  downloadBtn.style.color = 'var(--ash-900)';
 
-    card.appendChild(img);
-    card.appendChild(foot);
-    backdrop.appendChild(card);
-    root.appendChild(backdrop);
-  }
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = 'Close';
+  closeBtn.style.background = 'var(--ash-900)';
+  closeBtn.style.color = '#fff';
+  closeBtn.style.border = 'none';
+  closeBtn.style.padding = '8px 12px';
+  closeBtn.style.borderRadius = '8px';
+  closeBtn.onclick = ()=> root.innerHTML = '';
+
+  foot.appendChild(downloadBtn);
+  foot.appendChild(closeBtn);
+
+  imgWrap.appendChild(img);
+  card.appendChild(imgWrap);
+  card.appendChild(foot);
+  backdrop.appendChild(card);
+  root.appendChild(backdrop);
+
+  // keyboard close + ESC
+  function esc(e){ if(e.key === 'Escape'){ root.innerHTML = ''; document.removeEventListener('keydown', esc); } }
+  document.addEventListener('keydown', esc);
+}
+
+
+   
 
   // Sample modal
   const sampleHeroBtn = document.getElementById('sampleHero');
