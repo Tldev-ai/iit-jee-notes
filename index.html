@@ -627,7 +627,7 @@
 
           <!-- Card 3 -->
           <div class="result-card">
-            <img src="stu3.jpg" class="photo" alt="Student photo 3" />
+            <img src="/images/stu3.jpg" class="photo" alt="Student photo 3" />
             <div class="body">
               <div class="name">Rahul K</div>
              
@@ -703,8 +703,9 @@
   /* thumbnail box adaptive sizing */
   <!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
 <!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
+<!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
 <style>
-  /* full-slide sample thumbnails: one per viewport, no gap between slides */
+  /* Row: horizontal scroll, no gap between cards */
   .sample-row {
     display:flex;
     gap:0; /* no gap between slides */
@@ -714,68 +715,81 @@
     padding:0;
     margin:0;
     scroll-behavior: smooth;
-    /* hide scrollbar on webkit for cleaner look (optional) */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
+    -ms-overflow-style: none;  /* hide scrollbar IE/Edge */
+    scrollbar-width: none;     /* hide scrollbar Firefox */
   }
   .sample-row::-webkit-scrollbar { display:none; }
 
+  /* Each book-card is the same fixed size */
   .book-card {
-    flex: 0 0 100vw;       /* each card = full viewport width */
-    min-width: 100vw;
+    flex: 0 0 auto;           /* don't stretch; keep fixed */
+    width: 260px;             /* thumbnail box width (change as needed) */
+    min-width: 260px;
+    height: 340px;            /* thumbnail box height (change as needed) */
     scroll-snap-align: start;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
     box-sizing:border-box;
-    padding:0;              /* no extra padding */
+    padding:0;
     margin:0;
   }
 
-  /* thumbnail fills most of viewport height so content is readable */
+  /* The visible thumbnail box (inner card) */
   .sample-thumb {
-    width: calc(100% - 0px); /* full width of the card */
-    height: 75vh;            /* readable height; change to 80vh if you want taller */
+    width: 100%;
+    height: calc(100% - 28px); /* leave space for the label below */
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:hidden;
     background:var(--panel-bg);
     border-radius:12px;
-    padding:0;
+    padding:6px;               /* small padding so image doesn't touch edges */
     box-shadow: 0 10px 30px rgba(14,20,28,0.06);
   }
 
-  /* show whole sample page inside the slide (no cropping) */
+  /* Image fits inside the fixed box without cropping or stretching */
   .sample-thumb img {
     width:100%;
     height:100%;
-    object-fit: contain;   /* show entire page without cropping */
+    object-fit: contain;      /* show entire page, preserve aspect ratio */
     object-position: center;
     display:block;
-    transform-origin:center;
     transition: transform 220ms ease;
   }
 
-  /* slight hover zoom on desktop (no effect on touch) */
+  /* Optional hover zoom on desktop only (touch devices ignore) */
   @media (hover: hover) {
-    .sample-thumb:hover img { transform: scale(1.02); }
+    .sample-thumb:hover img { transform: scale(1.03); }
   }
 
-  /* hide the small subject label under each card on mobile for cleaner look;
-     keep for desktop by media query */
-  .book-card > .text-xs { display:block; padding-top:8px; text-align:center; }
-  @media (max-width: 640px) {
+  /* Label under thumbnail */
+  .book-card > .text-xs {
+    display:block;
+    padding-top:6px;
+    text-align:center;
+    font-weight:600;
+  }
+
+  /* Hide labels on very small screens to keep more visual area */
+  @media (max-width: 480px) {
+    .book-card { width: 220px; min-width:220px; height:300px; }
     .book-card > .text-xs { display:none; }
   }
 
-  /* make sure the in-modal preview grid still uses normal thumbnails (no change) */
-  @media(min-width:768px){
-    /* if you want more vertical space on large screens, increase height */
-    .sample-thumb { height: 80vh; }
+  /* If you want larger thumbnails on desktop, adjust these */
+  @media (min-width: 768px) {
+    .book-card { width: 300px; min-width:300px; height:380px; }
+    .sample-thumb { padding:8px; }
   }
 </style>
+
+
+
+  /* show whole sample page inside the slide (no cropping) */
+
 
 
 
