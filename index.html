@@ -715,6 +715,72 @@
   }
   .sample-row::-webkit-scrollbar{ display:none; }
 
+
+
+  /* ---------- uniform sample grid + first-thumb indicator ---------- */
+:root {
+  --thumb-aspect: 1.35;
+  --thumb-max-height: 640px;
+  --thumb-min-width: 220px;
+}
+
+/* grid used in modal for "All Sample Pages" */
+.sample-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--thumb-min-width), 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+/* uniform aspect boxes so thumbnails always match size */
+.thumb-box {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--panel-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(14,20,28,0.06);
+  aspect-ratio: 1 / var(--thumb-aspect);
+  max-height: var(--thumb-max-height);
+}
+
+/* image fills box consistently (contain keeps whole page visible) */
+.thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display:block;
+}
+
+/* small overlay on the first thumbnail to hint "more / swipe" */
+.first-thumb-indicator {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 8px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-weight:700;
+  font-size:13px;
+  padding:6px 10px;
+  border-radius:999px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  z-index: 40;
+  pointer-events: none;
+}
+.first-thumb-indicator svg { width:14px; height:14px; display:block; }
+
+@media(min-width:1024px){
+  .sample-grid { gap:16px; }
+  .first-thumb-indicator { bottom:12px; font-size:14px; padding:8px 12px; }
+}
+
+
   /* EXTRA-LARGE thumbnails */
   .book-card{
     flex: 0 0 auto;
@@ -835,55 +901,89 @@
 <!-- Sample modal / gallery JS -->
 <script>
   // Map image filenames to paths (p1..p6, c1..c6, m1..m6). Adjust extension if you use .png
-  const SAMPLE_IMAGES = {
-    physics: [
-      'p1.jpg','p2.jpg','/images/samples/p3.jpg',
-      'p4.jpg','p5.jpg','p6.jpg'
-    ],
-    chemistry: [
-      'c1.jpg','c2.jpg','/c3.jpg',
-      'c4.jpg','c5.jpg','c5.jpg'
-    ],
-    maths: [
-      'm1.jpg','m2.jpg','m3.jpg',
-      'm4.jpg','m5.jpg','m6.jpg'
-    ]
-  };
+  // Map image filenames to paths (ensure these paths match your actual files)
+const SAMPLE_IMAGES = {
+  physics: [
+    'pp1.jpg',
+    'pp2.jpg',
+    'pp3.jpg',
+    'pp4.jpg',
+    'pp5.jpg',
+    'pp6.jpg'
+  ],
+  chemistry: [
+    'cc1.jpg',
+    'cc2.jpg',
+    'cc3.jpg',
+    'cc4.jpg',
+    'cc5.jpg',
+    'cc6.jpg'
+  ],
+  maths: [
+    'mm1.jpg',
+    'mm2.jpg',
+    'mm3.jpg',
+    'mm4.jpg',
+    'mm5.jpg',
+    'mm6.jpg'
+  ]
+};
+
 
   // Open the "landing" modal with 3 subject tiles
   document.getElementById('seeSamplesBtn').addEventListener('click', ()=> openSamplesLanding());
 
   function openSamplesLanding(){
-    const html = `
-      <div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h3 style="font-size:18px;font-weight:700">Sample Pages — Select Subject</h3>
-          <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
-        </div>
+  // Flatten SAMPLE_IMAGES while preserving defined order
+  const allImages = [];
+  Object.keys(SAMPLE_IMAGES).forEach(subject => {
+    const arr = SAMPLE_IMAGES[subject] || [];
+    arr.forEach(src => allImages.push({ src, subject }));
+  });
 
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:14px">
-          <div style="background:var(--panel-bg);padding:14px;border-radius:10px;text-align:center;cursor:pointer" onclick="renderSampleGrid('physics')">
-            <div style="height:110px;display:flex;align-items:center;justify-content:center"><img src="/images/samples/p1.jpg" style="max-width:100%;max-height:100%;border-radius:8px" alt="Physics"/></div>
-            <div style="font-weight:700;margin-top:8px">Physics</div>
-            <div style="font-size:13px;color:var(--soft-ink);margin-top:6px">6 images</div>
-          </div>
+  // Build grid items; first item gets the "more" overlay
+  const gridItems = allImages.map((it, i) => {
+    const safeSrc = it.src.replace(/'/g, "\\'");
+    const overlayHtml = (i === 0) ? `
+      <div class="first-thumb-indicator" aria-hidden="true">
+        <span style="display:inline-flex;align-items:center;gap:6px;">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M8 5l8 7-8 7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          More
+        </span>
+      </div>` : '';
 
-          <div style="background:var(--panel-bg);padding:14px;border-radius:10px;text-align:center;cursor:pointer" onclick="renderSampleGrid('chemistry')">
-            <div style="height:110px;display:flex;align-items:center;justify-content:center"><img src="/images/samples/c1.jpg" style="max-width:100%;max-height:100%;border-radius:8px" alt="Chemistry"/></div>
-            <div style="font-weight:700;margin-top:8px">Chemistry</div>
-            <div style="font-size:13px;color:var(--soft-ink);margin-top:6px">6 images</div>
-          </div>
-
-          <div style="background:var(--panel-bg);padding:14px;border-radius:10px;text-align:center;cursor:pointer" onclick="renderSampleGrid('maths')">
-            <div style="height:110px;display:flex;align-items:center;justify-content:center"><img src="/images/samples/m1.jpg" style="max-width:100%;max-height:100%;border-radius:8px" alt="Maths"/></div>
-            <div style="font-weight:700;margin-top:8px">Maths</div>
-            <div style="font-size:13px;color:var(--soft-ink);margin-top:6px">6 images</div>
-          </div>
-        </div>
+    return `
+      <div class="thumb-box" role="button" tabindex="0"
+           onclick="openImageModal('${safeSrc}')"
+           onkeydown="(event.key==='Enter'||event.key===' ')&&openImageModal('${safeSrc}')">
+        <img src="${it.src}" alt="${it.subject} sample ${i+1}" loading="lazy" />
+        ${overlayHtml}
       </div>
     `;
-    openModal(html);
-  }
+  }).join('');
+
+  const html = `
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="font-size:18px;font-weight:700">All Sample Pages</h3>
+        <div>
+          <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;" class="sample-grid">
+        ${gridItems}
+      </div>
+    </div>
+  `;
+
+  openModal(html);
+}
+
+
+        
 
   // Show 6-image grid for chosen subject inside the same modal
   // Show tall, readable pages for chosen subject inside the same modal
@@ -1243,7 +1343,10 @@ function renderSampleGrid(subject){
 <script>
   // Set year
   // Set year
-document.getElementById('year').innerText = new Date().getFullYear();
+// safely set footer year if element exists
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.innerText = new Date().getFullYear();
+
 
 // === RAZORPAY LINK (paste your link here) ===
 const RAZORPAY_LINK = 'https://rzp.io/rzp/mJ2SF9tm';
