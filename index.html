@@ -659,41 +659,55 @@
     </div>
 
     <!-- 4 horizontally scrollable sample thumbnails -->
-    <div class="books-row mt-4 sample-row" id="sampleThumbRow">
+        <!-- sample row with arrows -->
+    <div class="relative mt-4">
+      <button id="samplePrevBtn" aria-label="Previous samples" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full shadow-lg" style="background:var(--panel-bg); border:1px solid rgba(0,0,0,0.06);">
+        ‹
+      </button>
 
-      <!-- Thumb 1 - Physics -->
-      <div class="book-card" data-subject="physics">
-        <div class="book-cover sample-thumb" role="button" aria-label="Open Physics samples" onclick="openSampleModal('physics')">
-          <img src="p1.jpg" alt="Physics sample 1" />
+      <div class="books-row mt-2 sample-row" id="sampleThumbRow" style="scroll-behavior:smooth;">
+        <!-- keep your same .book-card markup here (paste existing items) -->
+        <!-- Thumb items: physics, chemistry, maths, more -->
+        <div class="book-card" data-subject="physics">
+          <div class="book-cover sample-thumb" role="button" aria-label="Open Physics samples" onclick="openSampleModal('physics')">
+            <img src="p1.jpg" alt="Physics sample 1" />
+          </div>
+          <div class="text-xs mt-2" style="font-weight:600;text-align:center">Physics</div>
         </div>
-        <div class="text-xs mt-2" style="font-weight:600;text-align:center">Physics</div>
+        <div class="book-card" data-subject="chemistry">
+          <div class="book-cover sample-thumb" role="button" aria-label="Open Chemistry samples" onclick="openSampleModal('chemistry')">
+            <img src="c1.jpg" alt="Chemistry sample 1" />
+          </div>
+          <div class="text-xs mt-2" style="font-weight:600;text-align:center">Chemistry</div>
+        </div>
+        <div class="book-card" data-subject="maths">
+          <div class="book-cover sample-thumb" role="button" aria-label="Open Maths samples" onclick="openSampleModal('maths')">
+            <img src="m1.jpg" alt="Maths sample 1" />
+          </div>
+          <div class="text-xs mt-2" style="font-weight:600;text-align:center">Maths</div>
+        </div>
+        <div class="book-card" data-subject="combined">
+          <div class="book-cover sample-thumb" role="button" aria-label="Open More samples" onclick="openSampleModal('physics')">
+            <img src="p2.jpg" alt="More sample" />
+          </div>
+          <div class="text-xs mt-2" style="font-weight:600;text-align:center">More</div>
+        </div>
       </div>
 
-      <!-- Thumb 2 - Chemistry -->
-      <div class="book-card" data-subject="chemistry">
-        <div class="book-cover sample-thumb" role="button" aria-label="Open Chemistry samples" onclick="openSampleModal('chemistry')">
-          <img src="c1.jpg" alt="Chemistry sample 1" />
-        </div>
-        <div class="text-xs mt-2" style="font-weight:600;text-align:center">Chemistry</div>
-      </div>
+      <button id="sampleNextBtn" aria-label="Next samples" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full shadow-lg" style="background:var(--panel-bg); border:1px solid rgba(0,0,0,0.06);">
+        ›
+      </button>
 
-      <!-- Thumb 3 - Maths -->
-      <div class="book-card" data-subject="maths">
-        <div class="book-cover sample-thumb" role="button" aria-label="Open Maths samples" onclick="openSampleModal('maths')">
-          <img src="m1.jpg" alt="Maths sample 1" />
-        </div>
-        <div class="text-xs mt-2" style="font-weight:600;text-align:center">Maths</div>
-      </div>
-
-      <!-- Thumb 4 - More / Combined -->
-      <div class="book-card" data-subject="combined">
-        <div class="book-cover sample-thumb" role="button" aria-label="Open More samples" onclick="openSampleModal('physics')">
-          <img src="p2.jpg" alt="More sample" />
-        </div>
-        <div class="text-xs mt-2" style="font-weight:600;text-align:center">More</div>
+      <!-- swipe hint -->
+      <div class="first-thumb-indicator" style="position:absolute;right:12px;bottom:6px;z-index:30;pointer-events:none;">
+        Swipe →
       </div>
     </div>
-  </div>
+
+
+      
+
+    
 </section>
 
 <!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
@@ -781,12 +795,12 @@
 }
 
 
-  /* EXTRA-LARGE thumbnails */
+    /* Responsive thumbnail sizing — show multiple thumbnails on wide screens and narrow, allow swipe */
   .book-card{
     flex: 0 0 auto;
-    width: 92vw;                  /* HUGE on mobile */
-    min-width: 92vw;
-    height: calc(92vw * 1.35);    /* very tall for readability */
+    width: 260px;               /* card width — adjust as needed */
+    min-width: 260px;
+    height: 360px;              /* fixed card height for consistent layout */
     scroll-snap-align: start;
     display:flex;
     flex-direction:column;
@@ -804,16 +818,16 @@
     justify-content:center;
     overflow:hidden;
     background:var(--panel-bg);
-    border-radius:16px;
-    padding:4px;
-    box-shadow:0 20px 50px rgba(14,20,28,0.10);
+    border-radius:12px;
+    padding:8px;
+    box-shadow:0 12px 30px rgba(14,20,28,0.06);
   }
 
   /* KEEP ENTIRE PAGE VISIBLE (no cropping) */
   .sample-thumb img{
     width:100%;
     height:100%;
-    object-fit: contain;       /* FULL page visible */
+    object-fit: contain;
     object-position:center;
     display:block;
   }
@@ -827,63 +841,38 @@
     font-size:14px;
   }
 
-  /* Desktop — HUGE thumbnails */
+  /* Tablet/desktop: show slightly larger cards */
   @media(min-width:768px){
     .book-card{
-      width:480px;
-      min-width:480px;
-      height:650px;
+      width:320px;
+      min-width:320px;
+      height:420px;
     }
     .sample-thumb{
-      padding:8px;
-      border-radius:18px;
+      padding:10px;
+      border-radius:14px;
     }
   }
 
-  /* Very large desktop */
+  /* Large desktop */
   @media(min-width:1200px){
     .book-card{
-      width:520px;
-      min-width:520px;
-      height:720px;
+      width:360px;
+      min-width:360px;
+      height:460px;
     }
   }
 
-  /* Small phones */
+  /* Small phones: keep cards slightly smaller */
   @media(max-width:360px){
     .book-card{
-      width:96vw;
-      min-width:96vw;
-      height:calc(96vw * 1.32);
+      width:84vw;
+      min-width:84vw;
+      height:calc(84vw * 1.35);
     }
     .book-card > .text-xs{ display:none; }
   }
-  /* Modal close button (visible top-right) */
-.modal-card { position: relative; } /* ensure absolute children align */
-.modal-close-btn{
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 1300;
-  background: #ffffff;
-  color: var(--ash-900);
-  border: 0;
-  border-radius: 10px;
-  padding: 6px 10px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 8px 22px rgba(2,6,23,0.18);
-  line-height: 1;
-  transition: transform 140ms ease, box-shadow 140ms ease;
-}
-.modal-close-btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 36px rgba(2,6,23,0.22); }
 
-/* High contrast variant when modal background is dark */
-.modal-card.dark .modal-close-btn {
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.08);
-}
 
 </style>
 
@@ -893,7 +882,7 @@
 
 
 
-  /* show whole sample page inside the slide (no cropping) */
+
 
 
 
@@ -967,7 +956,11 @@ const SAMPLE_IMAGES = {
   const html = `
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 style="font-size:18px;font-weight:700">All Sample Pages</h3>
+         <h3 style="font-size:18px;font-weight:700;text-transform:capitalize;color:var(--ash-900)">${subject} — Sample Pages</h3>
+  <div>
+    <button onclick="openSamplesLanding()" style="background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px;border-radius:8px;cursor:pointer;color:var(--ash-900);margin-right:8px">Back</button>
+    <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
+  </div>
         <div>
           <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
         </div>
@@ -1006,15 +999,21 @@ function renderSampleGrid(subject){
 
   // Use a responsive grid that shows one large column on small screens
   // and two/three columns on wider screens. The images themselves have max-height so they stay readable.
-  const html = `
+    const html = `
     <div>
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 style="font-size:18px;font-weight:700;text-transform:capitalize">${subject} — Sample Pages</h3>
+        <h3 style="font-size:18px;font-weight:700">All Sample Pages</h3>
         <div>
-          <button onclick="openSamplesLanding()" style="background:transparent;border:none;color:var(--ash-900);margin-right:8px;cursor:pointer">Back</button>
           <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
         </div>
       </div>
+
+      <div style="margin-top:12px;" class="sample-grid">
+        ${gridItems}
+      </div>
+    </div>
+  `;
+
 
       <div style="margin-top:12px;
                   display:grid;
@@ -1039,7 +1038,7 @@ function renderSampleGrid(subject){
   // Accessibility: keyboard support for thumbnails (enter to open)
   // Accessibility: keyboard support for thumbnails (Enter to open) + arrow keys to move slides
 (function keyboardBindAndArrows(){
-  // Enter opens focused thumbnail
+  // Keyboard: Enter opens focused thumbnail
   document.addEventListener('keydown', function(e){
     if(e.key === 'Enter'){
       const active = document.activeElement;
@@ -1048,6 +1047,77 @@ function renderSampleGrid(subject){
       }
     }
   });
+
+ 
+
+  const prevBtn = document.getElementById('samplePrevBtn');
+  const nextBtn = document.getElementById('sampleNextBtn');
+
+  // utility: get all cards
+  function cards(){
+    return Array.from(row.querySelectorAll('.book-card'));
+  }
+
+  // scroll to given index (clamps)
+  function scrollToIndex(index){
+    const cs = cards();
+    if(!cs.length) return;
+    const idx = Math.max(0, Math.min(cs.length - 1, index));
+    cs[idx].scrollIntoView({behavior:'smooth', inline:'start', block:'nearest'});
+  }
+
+  // compute current index by smallest absolute left offset
+  function currentIndex(){
+    const cs = cards();
+    if(!cs.length) return 0;
+    let best = 0, bestDiff = Infinity;
+    cs.forEach((c,i)=>{
+      const rect = c.getBoundingClientRect();
+      const diff = Math.abs(rect.left - row.getBoundingClientRect().left);
+      if(diff < bestDiff){ best = i; bestDiff = diff; }
+    });
+    return best;
+  }
+
+  // Arrow keys navigation
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === 'Right'){
+      e.preventDefault();
+      scrollToIndex(currentIndex() + 1);
+    } else if(e.key === 'ArrowLeft' || e.key === 'Left'){
+      e.preventDefault();
+      scrollToIndex(currentIndex() - 1);
+    }
+  });
+
+  // Prev/Next button clicks
+  if(prevBtn) prevBtn.addEventListener('click', (ev)=>{
+    ev.preventDefault();
+    scrollToIndex(currentIndex() - 1);
+    row.querySelector('.sample-thumb')?.focus?.();
+  });
+  if(nextBtn) nextBtn.addEventListener('click', (ev)=>{
+    ev.preventDefault();
+    scrollToIndex(currentIndex() + 1);
+    row.querySelector('.sample-thumb')?.focus?.();
+  });
+
+  // Snap to nearest after scroll stops (debounced)
+  let snapTimeout = null;
+  row.addEventListener('scroll', function(){
+    if(snapTimeout) clearTimeout(snapTimeout);
+    snapTimeout = setTimeout(()=>{
+      const idx = currentIndex();
+      scrollToIndex(idx);
+    }, 120);
+  }, {passive:true});
+
+  // ensure we start showing the FIRST thumbnail (index 0) on load
+  // do it after a short delay to allow layout to settle
+  setTimeout(()=> scrollToIndex(0), 50);
+
+})();
+
 
   // Arrow navigation: left/right to move to prev/next slide
   const row = document.getElementById('sampleThumbRow');
