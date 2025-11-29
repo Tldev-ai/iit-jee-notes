@@ -794,6 +794,33 @@
     }
     .book-card > .text-xs{ display:none; }
   }
+  /* Modal close button (visible top-right) */
+.modal-card { position: relative; } /* ensure absolute children align */
+.modal-close-btn{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1300;
+  background: #ffffff;
+  color: var(--ash-900);
+  border: 0;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(2,6,23,0.18);
+  line-height: 1;
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+.modal-close-btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 36px rgba(2,6,23,0.22); }
+
+/* High contrast variant when modal background is dark */
+.modal-card.dark .modal-close-btn {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
 </style>
 
 
@@ -861,31 +888,48 @@
   }
 
   // Show 6-image grid for chosen subject inside the same modal
-  function renderSampleGrid(subject){
-    const images = SAMPLE_IMAGES[subject] || [];
-    const gridItems = images.map(src => {
-      return `<div style="background:var(--panel-bg);padding:8px;border-radius:10px;display:flex;align-items:center;justify-content:center">
-                <img src="${src}" style="width:100%;height:auto;max-height:180px;border-radius:8px;cursor:pointer" onclick="openImageModal('${src}')" />
-              </div>`;
-    }).join('');
+  // Show tall, readable pages for chosen subject inside the same modal
+function renderSampleGrid(subject){
+  const images = SAMPLE_IMAGES[subject] || [];
 
-    const html = `
-      <div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h3 style="font-size:18px;font-weight:700;text-transform:capitalize">${subject} — Sample Pages</h3>
-          <div>
-            <button onclick="openSamplesLanding()" style="background:transparent;border:none;color:var(--ash-900);margin-right:8px;cursor:pointer">Back</button>
-            <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
-          </div>
-        </div>
-
-        <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
-          ${gridItems}
-        </div>
+  // build grid items with much taller previews (clickable)
+  const gridItems = images.map(src => {
+    return `
+      <div style="background:var(--panel-bg);padding:8px;border-radius:10px;display:flex;align-items:center;justify-content:center">
+        <img
+          src="${src}"
+          style="width:100%;height:auto;max-height:640px;object-fit:contain;border-radius:8px;cursor:pointer;display:block"
+          onclick="openImageModal('${src}')"
+          alt="${subject} sample"
+        />
       </div>
     `;
-    openModal(html);
-  }
+  }).join('');
+
+  // Use a responsive grid that shows one large column on small screens
+  // and two/three columns on wider screens. The images themselves have max-height so they stay readable.
+  const html = `
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="font-size:18px;font-weight:700;text-transform:capitalize">${subject} — Sample Pages</h3>
+        <div>
+          <button onclick="openSamplesLanding()" style="background:transparent;border:none;color:var(--ash-900);margin-right:8px;cursor:pointer">Back</button>
+          <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;
+                  display:grid;
+                  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+                  gap:16px;
+                  align-items:start;
+                  ">
+        ${gridItems}
+      </div>
+    </div>
+  `;
+  openModal(html);
+}
 
   // Shortcut: clicking a homepage thumbnail opens the modal directly to that subject
   function openSampleModal(subject){
