@@ -445,17 +445,17 @@
             
             
         </div>
-        <div class="text-xs" style="color:var(--soft-ink)">Secure payments • Instant link</div>
+        
       </div>
     </div>
 
     <!-- Prominent dark timer band under ribbon -->
     <div class="timer-band">
       <div class="max-w-xl mx-auto px-4 py-6 text-center">
-        <div class="text-sm text-white/90 mb-2">📘 Compulsory revision bundle for JEE 2026<strong> — recommended by toppers</strong></div>
+        <div class="text-sm text-white/90 mb-2">Countdown to Jan 21 has begun<strong> — don’t waste another day. </strong></div>
         <div class="flex flex-col items-center gap-2">
           <div class="timer-digit" id="bigTimer">00:00:00</div>
-          <div class="text-sm text-white/70">Only a few hours left to claim this <span id="daysText">bundle</span></div>
+          <div class="text-sm text-white/70">Easy notes for fast revision<span id="daysText"> — perfect for the final days.</span></div>
         </div>
       </div>
     </div>
@@ -475,8 +475,7 @@
 
 
       <!-- HERO -->
-      <section class="pt-4 pb-2 relative">
-
+      <section class="pt-6 pb-4 relative">
         <div>
           <div class="mb-2 badge">Handwritten by toppers • Faculty-reviewed</div>
 
@@ -485,10 +484,12 @@
 
           <div class="mt-4 flex flex-col items-center">
             <!-- bigger container, taller, no rotation to avoid cropping -->
-            <div class="w-[300px] sm:w-[340px] h-[480px] sm:h-[560px] relative">
-  <img id="heroImg" src="img1.jpg" class="w-full h-full object-contain rounded-xl shadow-soft" />
-</div>
-
+            <div class="w-[320px] sm:w-[350px] h-[560px] sm:h-[640px] relative">
+              <img id="heroImg"
+                   src="imgg1.jpg"
+                   alt="notes mockup"
+                   class="w-full h-full object-contain rounded-xl shadow-soft" />
+            </div>
           
             <!-- price badge moved outside the image (below it) -->
             <div class="mt-4 bg-[#f3f4f6] px-4 py-3 rounded-xl shadow-soft text-left w-fit mx-auto">
@@ -559,8 +560,8 @@
               <div class="text-sm font-semibold">Instant Deliver</div>
             </div>
             <div class="tile">
-              <div class="icon">🧠</div>
-              <div class="text-sm font-semibold">Mind Maps</div>
+              <div class="icon">🔁</div>
+              <div class="text-sm font-semibold">Easy Revision</div>
             </div>
           </div>
         </div>
@@ -572,7 +573,7 @@
           <div class="bg-[var(--ash-900)] p-3 text-white font-semibold">WHAT'S INCLUDED?</div>
           <div class="bg-white p-6 space-y-3 shadow-soft">
             <ul class="included-list">
-              <li>Short Notes & Mind Maps (Maths, Physics, Chemistry)</li>
+              <li>Short Notes & Quick Revision Pages(Maths, Physics, Chemistry)</li>
               <li>Formula Book & One-liners</li>
               <li>Toppers’ Handwritten Notes</li>
               <li>Expected / Repeated Questions</li>
@@ -606,7 +607,7 @@
         <div class="results-grid" id="resultsScroll">
           <!-- Card 1 -->
           <div class="result-card">
-            <img src="/images/student1.jpg" class="photo" alt="Student photo 1" />
+            <img src="stu.jpg" class="photo" alt="Student photo 1" />
             <div class="body">
               <div class="name">Sri Charan</div>
               <div class="role">IIT Bombay (Computer Science)</div>
@@ -616,34 +617,23 @@
 
           <!-- Card 2 -->
           <div class="result-card">
-            <img src="/images/student2.jpg" class="photo" alt="Student photo 2" />
+            <img src="stu2.jpg" class="photo" alt="Student photo 2" />
             <div class="body">
               <div class="name">Ananya R</div>
-              <div class="role">AIR 432</div>
+              
               <div class="quote">“Clear diagrams and concise formulas made revision quick & effective.”</div>
             </div>
           </div>
 
           <!-- Card 3 -->
           <div class="result-card">
-            <img src="/images/student3.jpg" class="photo" alt="Student photo 3" />
+            <img src="/images/stu3.jpg" class="photo" alt="Student photo 3" />
             <div class="body">
               <div class="name">Rahul K</div>
-              <div class="role">JEE Advanced - Topper</div>
+             
               <div class="quote">“Formula book and mind maps helped me solve numericals faster.”</div>
             </div>
           </div>
-
-          <!-- Card 4 -->
-          <div class="result-card">
-            <img src="/images/student4.jpg" class="photo" alt="Student photo 4" />
-            <div class="body">
-              <div class="name">Parent Review</div>
-              <div class="role">Mother — Hyderabad</div>
-              <div class="quote">“Instant delivery + clear notes — my child improved confidence quickly.”</div>
-            </div>
-          </div>
-        </div>
       </section>
 
       <!-- 'See more' modal container (hidden until clicked) -->
@@ -661,6 +651,194 @@
         </div>
       </section>
 
+
+      <!-- ====== SAMPLE SECTION (START) ====== -->
+<section class="mt-6">
+  <div class="card p-6">
+    <div class="results-heading max-w-xl mx-auto px-0">
+      <h3>📄 Sample Pages</h3>
+      <a id="seeSamplesBtn" href="javascript:void(0)">See more</a>
+    </div>
+
+    <!-- 4 horizontally scrollable sample thumbnails -->
+    <div class="books-row mt-4 sample-row" id="sampleThumbRow" style="padding-left:6px;padding-right:6px;">
+      <!-- Thumb 1 - Physics -->
+      <div class="book-card" data-subject="physics">
+        <div class="book-cover sample-thumb" role="button" aria-label="Open Physics samples" onclick="openSampleModal('physics')">
+          <img src="p1.jpg" alt="Physics sample 1" />
+        </div>
+        <div class="text-xs mt-2" style="font-weight:600;text-align:center">Physics</div>
+      </div>
+
+      <!-- Thumb 2 - Chemistry -->
+      <div class="book-card" data-subject="chemistry">
+        <div class="book-cover sample-thumb" role="button" aria-label="Open Chemistry samples" onclick="openSampleModal('chemistry')">
+          <img src="c1.jpg" alt="Chemistry sample 1" />
+        </div>
+        <div class="text-xs mt-2" style="font-weight:600;text-align:center">Chemistry</div>
+      </div>
+
+      <!-- Thumb 3 - Maths -->
+      <div class="book-card" data-subject="maths">
+        <div class="book-cover sample-thumb" role="button" aria-label="Open Maths samples" onclick="openSampleModal('maths')">
+          <img src="m1.jpg" alt="Maths sample 1" />
+        </div>
+        <div class="text-xs mt-2" style="font-weight:600;text-align:center">Maths</div>
+      </div>
+
+      <!-- Thumb 4 - More / Combined -->
+      <div class="book-card" data-subject="combined">
+        <div class="book-cover sample-thumb" role="button" aria-label="Open More samples" onclick="openSampleModal('physics')">
+          <img src="p2.jpg" alt="More sample" />
+        </div>
+        <div class="text-xs mt-2" style="font-weight:600;text-align:center">More</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Inline styles specific to sample thumbnails (keeps consistent look) -->
+<style>
+  /* thumbnail box adaptive sizing */
+  .sample-thumb {
+    width: 140px;
+    height: 160px; /* fixed box height for neat grid; scales on larger screens via media query */
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:var(--panel-bg);
+    border-radius:10px;
+    padding:6px;
+  }
+  .sample-thumb img {
+    width:100%;
+    height:100%;
+    object-fit:contain; /* preserves full screenshot aspect ratio inside box */
+    display:block;
+  }
+
+  /* responsive: larger thumbnail on wider screens */
+  @media(min-width:768px){
+    .sample-thumb { width:170px; height:200px; }
+  }
+
+  /* ensure horizontal row is swipe-friendly */
+  .sample-row { -webkit-overflow-scrolling: touch; overflow-x:auto; display:flex; gap:18px; padding-bottom:12px; }
+  .sample-row .book-card { min-width:140px; flex:0 0 auto; }
+</style>
+
+<!-- Sample modal / gallery JS -->
+<script>
+  // Map image filenames to paths (p1..p6, c1..c6, m1..m6). Adjust extension if you use .png
+  const SAMPLE_IMAGES = {
+    physics: [
+      'p1.jpg','p2.jpg','/images/samples/p3.jpg',
+      'p4.jpg','p5.jpg','p6.jpg'
+    ],
+    chemistry: [
+      'c1.jpg','c2.jpg','/c3.jpg',
+      'c4.jpg','c5.jpg','c5.jpg'
+    ],
+    maths: [
+      'm1.jpg','m2.jpg','m3.jpg',
+      'm4.jpg','m5.jpg','m6.jpg'
+    ]
+  };
+
+  // Open the "landing" modal with 3 subject tiles
+  document.getElementById('seeSamplesBtn').addEventListener('click', ()=> openSamplesLanding());
+
+  function openSamplesLanding(){
+    const html = `
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="font-size:18px;font-weight:700">Sample Pages — Select Subject</h3>
+          <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:14px">
+          <div style="background:var(--panel-bg);padding:14px;border-radius:10px;text-align:center;cursor:pointer" onclick="renderSampleGrid('physics')">
+            <div style="height:110px;display:flex;align-items:center;justify-content:center"><img src="/images/samples/p1.jpg" style="max-width:100%;max-height:100%;border-radius:8px" alt="Physics"/></div>
+            <div style="font-weight:700;margin-top:8px">Physics</div>
+            <div style="font-size:13px;color:var(--soft-ink);margin-top:6px">6 images</div>
+          </div>
+
+          <div style="background:var(--panel-bg);padding:14px;border-radius:10px;text-align:center;cursor:pointer" onclick="renderSampleGrid('chemistry')">
+            <div style="height:110px;display:flex;align-items:center;justify-content:center"><img src="/images/samples/c1.jpg" style="max-width:100%;max-height:100%;border-radius:8px" alt="Chemistry"/></div>
+            <div style="font-weight:700;margin-top:8px">Chemistry</div>
+            <div style="font-size:13px;color:var(--soft-ink);margin-top:6px">6 images</div>
+          </div>
+
+          <div style="background:var(--panel-bg);padding:14px;border-radius:10px;text-align:center;cursor:pointer" onclick="renderSampleGrid('maths')">
+            <div style="height:110px;display:flex;align-items:center;justify-content:center"><img src="/images/samples/m1.jpg" style="max-width:100%;max-height:100%;border-radius:8px" alt="Maths"/></div>
+            <div style="font-weight:700;margin-top:8px">Maths</div>
+            <div style="font-size:13px;color:var(--soft-ink);margin-top:6px">6 images</div>
+          </div>
+        </div>
+      </div>
+    `;
+    openModal(html);
+  }
+
+  // Show 6-image grid for chosen subject inside the same modal
+  function renderSampleGrid(subject){
+    const images = SAMPLE_IMAGES[subject] || [];
+    const gridItems = images.map(src => {
+      return `<div style="background:var(--panel-bg);padding:8px;border-radius:10px;display:flex;align-items:center;justify-content:center">
+                <img src="${src}" style="width:100%;height:auto;max-height:180px;border-radius:8px;cursor:pointer" onclick="openImageModal('${src}')" />
+              </div>`;
+    }).join('');
+
+    const html = `
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="font-size:18px;font-weight:700;text-transform:capitalize">${subject} — Sample Pages</h3>
+          <div>
+            <button onclick="openSamplesLanding()" style="background:transparent;border:none;color:var(--ash-900);margin-right:8px;cursor:pointer">Back</button>
+            <button onclick="closeModal()" style="background:#eee;padding:8px;border-radius:8px;border:none;cursor:pointer">Close</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+          ${gridItems}
+        </div>
+      </div>
+    `;
+    openModal(html);
+  }
+
+  // Shortcut: clicking a homepage thumbnail opens the modal directly to that subject
+  function openSampleModal(subject){
+    // ensure modalRoot exists and open placeholder while we render
+    openModal('<div style="padding:18px"><div style="text-align:center;padding:20px 0">Loading...</div></div>');
+    setTimeout(()=> renderSampleGrid(subject), 80);
+  }
+
+  // Accessibility: keyboard support for thumbnails (enter to open)
+  (function keyboardBind(){
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){
+        const active = document.activeElement;
+        if(active && active.closest && active.closest('.sample-thumb')){
+          active.click();
+        }
+      }
+    });
+  })();
+</script>
+<!-- ====== SAMPLE SECTION (END) ====== -->
+
+
+
+
+
+
+
+
+
+
+
       <!-- ====== BOOK SHOWCASE (three vertical books) ====== -->
       <!-- ====== BOOK SHOWCASE + RIGHT-SIDED DETAILS (replaced to match image 2) ====== -->
 <section class="mt-6">
@@ -669,7 +847,7 @@
         <!-- LEFT: large book / bundle image -->
         <div class="w-full">
           <div class="rounded-xl overflow-hidden shadow-soft" style="background:#fff;">
-            <img src="/images/revision-bundle-wide.jpg" alt="Revision Bundle book" style="width:100%; height:auto; display:block; object-fit:cover;"/>
+            <img src="imgg2.jpg" alt="Revision Bundle book" style="width:100%; height:auto; display:block; object-fit:cover;"/>
           </div>
         </div>
   
