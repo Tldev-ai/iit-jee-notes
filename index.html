@@ -698,10 +698,11 @@
         ›
       </button>
 
-      <!-- swipe hint -->
-      <div class="first-thumb-indicator" style="position:absolute;right:12px;bottom:6px;z-index:30;pointer-events:none;">
-        Swipe →
-      </div>
+      <!-- swipe hint (placed at right edge, vertically centered) -->
+<div class="first-thumb-indicator" aria-hidden="true">
+  <span class="fti-text">Swipe to see more →</span>
+</div>
+
     </div>
 
 
@@ -770,29 +771,38 @@
 }
 
 /* small overlay on the first thumbnail to hint "more / swipe" */
-.first-thumb-indicator {
+/* small overlay hint placed at the right edge, vertically centered */
+.first-thumb-indicator{
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 8px;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   background: rgba(0,0,0,0.6);
   color: #fff;
   font-weight:700;
   font-size:13px;
-  padding:6px 10px;
+  padding:8px 12px;
   border-radius:999px;
   display:flex;
   gap:8px;
   align-items:center;
   z-index: 40;
   pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.25);
 }
-.first-thumb-indicator svg { width:14px; height:14px; display:block; }
 
-@media(min-width:1024px){
-  .sample-grid { gap:16px; }
-  .first-thumb-indicator { bottom:12px; font-size:14px; padding:8px 12px; }
+/* optional: slightly larger on tablets */
+@media(min-width:768px){
+  .first-thumb-indicator{ font-size:14px; padding:10px 14px; }
 }
+
+/* optional: hide the hint on very wide screens (if you want it only on mobile/tablet) */
+/* remove this block if you want it visible everywhere */
+@media(min-width:1200px){
+  .first-thumb-indicator{ display: none; }
+}
+
 
 
     /* Responsive thumbnail sizing — show multiple thumbnails on wide screens and narrow, allow swipe */
