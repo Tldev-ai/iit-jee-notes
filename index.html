@@ -698,10 +698,13 @@
         ›
       </button>
 
-      <!-- swipe hint (placed at right edge, vertically centered) -->
+     <div class="books-row mt-2 sample-row" id="sampleThumbRow"> ... </div>
+
+<!-- swipe hint (placed at right edge, vertically centered) -->
 <div class="first-thumb-indicator" aria-hidden="true">
   <span class="fti-text">Swipe to see more →</span>
 </div>
+
 
     </div>
 
@@ -1444,17 +1447,27 @@ const RAZORPAY_LINK = 'https://rzp.io/rzp/mJ2SF9tm';
    // ---------- TARGET DATE (correct) ----------
 /* Set the date/time you want the countdown to target.
    Example: new Date('2025-12-20T18:29:59Z') or calculate relative like below. */
-let tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
-tomorrow.setHours(23, 59, 59, 999);
 
-// Use the real variable 'tomorrow' as the target
-const TARGET_DATE = tomorrow;
+// --------- Countdown targets (TOP -> Jan 26 of next occurrence, HERO -> tomorrow) ---------
 
+// Compute next Jan 26 (if today is already past Jan 26 this year, use next year)
+(function computeTargets(){
+  const now = new Date();
+  const yearForJan26 = (now.getMonth() > 0 || (now.getMonth() === 0 && now.getDate() > 26))
+    ? now.getFullYear() + 1
+    : now.getFullYear();
 
- // UTC time (example)
- // <-- change this
+  // January = 0
+  window.TOP_TARGET = new Date(yearForJan26, 0, 26, 23, 59, 59, 999); 
 
+  // Hero timer → end of tomorrow
+  let tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(23, 59, 59, 999);
+  window.HERO_TARGET = tomorrow;
+})();
+
+// Utility
 function getCountdownToTarget(target){
   const now = new Date();
   const diff = Math.max(0, target - now);
@@ -1466,46 +1479,97 @@ function getCountdownToTarget(target){
 }
 function two(n){ return String(n).padStart(2,'0'); }
 
-function refreshTimers(){
-  const c = getCountdownToTarget(TARGET_DATE);
-  const hms = two(c.hrs) + ':' + two(c.mins) + ':' + two(c.secs);
+// Update specific timer pair
+function updateTimerDisplay(timerId, daysId, target){
+  const c = getCountdownToTarget(target);
+  const hms = `${two(c.hrs)}:${two(c.mins)}:${two(c.secs)}`;
+  
+  const el = document.getElementById(timerId);
+  if(el) el.innerText = hms;
 
-  // top band timer
-  const elTop = document.getElementById('bigTimer');
-  if(elTop) elTop.innerText = hms;
-  const dTop = document.getElementById('daysText');
-  if(dTop) dTop.innerText = (c.days <= 1 ? c.days + ' day' : c.days + ' days');
-
-  // hero FAQ timer
-  const elFAQ = document.getElementById('bigTimerFAQ');
-  if(elFAQ) elFAQ.innerText = hms;
-  const dFAQ = document.getElementById('daysTextFAQ');
-  if(dFAQ) dFAQ.innerText = (c.days <= 1 ? c.days + ' day' : c.days + ' days');
+  const dEl = document.getElementById(daysId);
+  if(dEl) dEl.innerText = (c.days <= 1 ? `${c.days} day` : `${c.days} days`);
 }
 
-// initial + interval
+// Refresh both timers
+function refreshBothTimers(){
+  updateTimerDisplay('bigTimer', 'daysText', window.TOP_TARGET);
+  updateTimerDisplay('bigTimerFAQ', 'daysTextFAQ', window.HERO_TARGET);
+}
 
-// Start timers only after DOM is ready and ensure TARGET_DATE is valid
+// Start interval
+// --------- Dual timers: TOP -> Jan 21 (next occurrence), HERO -> end of tomorrow ---------
+
+// Compute targets (safe for when today is past Jan 21)
+(function computeTargets(){
+  const now = new Date();
+
+  // If today is after Jan 21 this year, use next year; else use this year
+  const jan21ThisYear = new Date(now.getFullYear(), 0, 21, 23, 59, 59, 999);
+  const yearForJan21 = (now > jan21ThisYear) ? now.getFullYear() + 1 : now.getFullYear();
+  window.TOP_TARGET = new Date(yearForJan21, 0, 21, 23, 59, 59, 999);
+
+  // HERO target = end of tomorrow (23:59:59.999 local time)
+  const tom = new Date();
+  tom.setDate(tom.getDate() + 1);
+  tom.setHours(23, 59, 59, 999);
+  window.HERO_TARGET = tom;
+})();
+
+// Utility helpers
+function getCountdownToTarget(target){
+  const now = new Date();
+  const diff = Math.max(0, target - now);
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hrs  = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const secs = Math.floor((diff % (1000*60)) / 1000);
+  return { days, hrs, mins, secs };
+}
+function two(n){ return String(n).padStart(2,'0'); }
+
+function updateTimerDisplay(timerId, daysId, target){
+  const c = getCountdownToTarget(target);
+  const hms = `${two(c.hrs)}:${two(c.mins)}:${two(c.secs)}`;
+
+  const el = document.getElementById(timerId);
+  if(el) el.innerText = hms;
+
+  const dEl = document.getElementById(daysId);
+  if(dEl) dEl.innerText = (c.days <= 1 ? `${c.days} day` : `${c.days} days`);
+}
+
+// Refresh both timers once per second (clears previous interval if present)
 (function(){
-  // If TARGET_DATE is missing or invalid, default to end of today (safe fallback)
-  if (typeof TARGET_DATE === 'undefined' || !(TARGET_DATE instanceof Date) || isNaN(TARGET_DATE.getTime())) {
-    const fallback = new Date();
-    fallback.setHours(23,59,59,999);
-    window.TARGET_DATE = fallback;
+  if (window.__ii_timer_interval__) {
+    clearInterval(window.__ii_timer_interval__);
+    window.__ii_timer_interval__ = null;
   }
 
-  function start() {
-    // run immediately and then every second
-    refreshTimers();
-    window.__ii_timer_interval__ = setInterval(refreshTimers, 1000);
+  function refreshBothTimers(){
+    updateTimerDisplay('bigTimer', 'daysText', window.TOP_TARGET);
+    updateTimerDisplay('bigTimerFAQ', 'daysTextFAQ', window.HERO_TARGET);
   }
 
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  function start(){
+    refreshBothTimers();
+    window.__ii_timer_interval__ = setInterval(refreshBothTimers, 1000);
+  }
+
+  if(document.readyState === 'complete' || document.readyState === 'interactive'){
     start();
   } else {
     document.addEventListener('DOMContentLoaded', start);
   }
 })();
+
+
+
+  
+
+
+ 
+
 
 
 // ---------- FAQ accordion behaviour (only one open at a time) ----------
